@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="SoundWave.Business/SoundWave.Business.csproj" />
+  <Project Path="SoundWave.DataAccess/SoundWave.DataAccess.csproj" />
+  <Project Path="SoundWave.DTO/SoundWave.DTO.csproj" />
+  <Project Path="SoundWave.Entity/SoundWave.Entity.csproj" />
+  <Project Path="SoundWave.WebUI/SoundWave.WebUI.csproj" />
+</Solution>

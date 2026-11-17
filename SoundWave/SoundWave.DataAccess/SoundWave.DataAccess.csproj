@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SoundWave.DTO\SoundWave.DTO.csproj" />
+    <ProjectReference Include="..\SoundWave.Entity\SoundWave.Entity.csproj" />
+  </ItemGroup>
+
+</Project>
