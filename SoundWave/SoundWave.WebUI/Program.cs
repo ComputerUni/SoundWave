@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using SoundWave.DataAccess.Context;
+using SoundWave.WebUI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.AddBusinessServices(builder.Configuration);
+builder.Services.AddRepositories();
+builder.Services.AddIdentityServices();
+builder.Services.AddJwtAuthentication(builder.Configuration);
+builder.Services.AddAuthorizationPolicies();
 
 builder.Services.AddControllersWithViews();
 
@@ -23,7 +30,10 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
@@ -33,6 +43,11 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+using (var scope = app.Services.CreateScope())
+{
+    await DataSeeder.SeedRolesAsync(scope.ServiceProvider);
+}
 
 
 app.Run();

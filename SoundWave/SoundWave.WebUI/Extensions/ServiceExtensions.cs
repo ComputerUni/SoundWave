@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using SoundWave.Business.Mappings;
 using SoundWave.Business.Options;
 using SoundWave.Business.Services.Abstract;
 using SoundWave.Business.Services.Concrete;
@@ -18,6 +19,7 @@ namespace SoundWave.WebUI.Extensions
         public static void AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IArtistService, ArtistService>();
@@ -68,6 +70,40 @@ namespace SoundWave.WebUI.Extensions
                     ClockSkew = TimeSpan.Zero,
                     RoleClaimType = ClaimTypes.Role
                 };
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Cookies["access_token"];
+                        if (!string.IsNullOrEmpty(token))
+                        {
+                            context.Token = token;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+        }
+
+        public static void AddAuthorizationPolicies(this IServiceCollection services)
+        {
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("CanListenStandard", policy =>
+                {
+                    policy.RequireRole("Standard", "Premium", "Diamond");
+                });
+
+                options.AddPolicy("CanListenPremium", policy =>
+                {
+                    policy.RequireRole("Premium", "Diamond");
+                });
+
+                options.AddPolicy("CanListenDiamond", policy =>
+                {
+                    policy.RequireRole("Diamond");
+                });
             });
         }
     }
