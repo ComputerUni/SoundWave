@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\SoundWave.Entity\SoundWave.Entity.csproj" />
+  </ItemGroup>
+
 </Project>
