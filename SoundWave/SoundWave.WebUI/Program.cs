@@ -47,6 +47,8 @@ app.MapControllerRoute(
 using (var scope = app.Services.CreateScope())
 {
     await DataSeeder.SeedRolesAsync(scope.ServiceProvider);
+    await DataSeeder.SeedUsersAsync(scope.ServiceProvider);
+    await DataSeeder.SeedMusicAsync(scope.ServiceProvider);
 }
 
 
