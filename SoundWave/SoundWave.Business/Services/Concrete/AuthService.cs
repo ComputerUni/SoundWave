@@ -63,5 +63,16 @@ namespace SoundWave.Business.Services.Concrete
 
             return result;
         }
+
+        public async Task<string> SelectPlanAsync(int userId, SubscriptionLevel level)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            var userRole = await _userManager.GetRolesAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, userRole);
+            await _userManager.AddToRoleAsync(user, role: level.ToString());
+            user.SubscriptionLevel = level;
+            await _userManager.UpdateAsync(user);
+            return await _tokenService.GenerateTokenAsync(user);
+        }
     }
 }
