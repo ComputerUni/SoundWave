@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SoundWave.Business.Services.Abstract;
 using SoundWave.DTO.AuthDtos;
 using SoundWave.Entity.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SoundWave.Entity.Enums;
 
 namespace SoundWave.Business.Services.Concrete
 {
@@ -54,14 +51,14 @@ namespace SoundWave.Business.Services.Concrete
                 Email = dto.Email,
                 FullName = dto.FullName,
                 CreatedAt = DateTime.UtcNow,
-                SubscriptionLevel = dto.SubscriptionLevel
+                SubscriptionLevel = SubscriptionLevel.Free
             };
 
             var result = await _userManager.CreateAsync(newUser, dto.Password);
 
             if(result.Succeeded)
             {
-                await _userManager.AddToRoleAsync(newUser, dto.SubscriptionLevel.ToString());
+                await _userManager.AddToRoleAsync(newUser, SubscriptionLevel.Free.ToString());
             }
 
             return result;
