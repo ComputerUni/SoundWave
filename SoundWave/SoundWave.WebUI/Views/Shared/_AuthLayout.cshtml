@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] | SoundWave - Yeni Nesil Müzik Platformu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+    <script>
+            tailwind.config = {
+                darkMode: 'class',
+                theme: {
+                    extend: {
+                        fontFamily: {
+                            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        },
+                        animation: {
+                            'pulse-slow': 'pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                            'equalizer-1': 'eq 1.2s ease-in-out infinite',
+                            'equalizer-2': 'eq 0.9s ease-in-out infinite 0.2s',
+                            'equalizer-3': 'eq 1.4s ease-in-out infinite 0.4s',
+                            'equalizer-4': 'eq 1.0s ease-in-out infinite 0.1s',
+                        },
+                        keyframes: {
+                            eq: {
+                                '0%, 100%': { height: '8px' },
+                                '50%': { height: '28px' },
+                            }
+                        }
+                    }
+                }
+            }
+    </script>
+
+    <style>
+            body {
+                background-color: #07090E;
+                overflow-x: hidden;
+            }
+
+            .glass-card {
+                background: rgba(17, 22, 34, 0.72);
+                backdrop-filter: blur(20px);
+                -webkit-backdrop-filter: blur(20px);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+            }
+
+            .gradient-text {
+                background: linear-gradient(135deg, #A855F7 0%, #EC4899 50%, #06B6D4 100%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .btn-gradient {
+                background: linear-gradient(135deg, #7C3AED 0%, #DB2777 55%, #0891B2 100%);
+                background-size: 200% auto;
+                transition: all 0.4s ease;
+            }
+
+                .btn-gradient:hover {
+                    background-position: right center;
+                    box-shadow: 0 0 25px rgba(219, 39, 119, 0.45);
+                }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="min-h-screen flex items-center justify-center text-slate-100 relative selection:bg-fuchsia-500 selection:text-white p-4">
+
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-32 -left-32 w-96 h-96 bg-purple-600/25 rounded-full blur-[128px] animate-pulse-slow"></div>
+        <div class="absolute top-1/2 -right-32 w-[28rem] h-[28rem] bg-cyan-500/20 rounded-full blur-[128px] animate-pulse-slow"></div>
+        <div class="absolute -bottom-32 left-1/3 w-96 h-96 bg-pink-600/20 rounded-full blur-[128px] animate-pulse-slow"></div>
+    </div>
+
+    @RenderBody()
+
+    <script>
+            function togglePassword(inputId = 'passwordInput', iconId = 'eyeIcon') {
+                const pwdInput = document.getElementById(inputId);
+                const eyeIcon = document.getElementById(iconId);
+                if (!pwdInput || !eyeIcon) return;
+
+                if (pwdInput.type === 'password') {
+                    pwdInput.type = 'text';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                } else {
+                    pwdInput.type = 'password';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                }
+            }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
