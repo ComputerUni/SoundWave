@@ -1,0 +1,13 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SoundWave.DTO.AuthDtos;
+
+namespace SoundWave.WebUI.ViewComponents._AuthLayoutViewComponents
+{
+    public class _AuthLayoutRegisterBrandViewComponent : ViewComponent
+    {
+        public IViewComponentResult Invoke(RegisterDto model)
+        {
+            return View(model);
+        }
+    }
+}
