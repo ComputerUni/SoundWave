@@ -10,7 +10,16 @@ namespace SoundWave.Business.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Song, ResultSongDto>();
+            CreateMap<Song, ResultSongDto>()
+                .ForMember(dest => dest.ArtistName, opt => opt.MapFrom(src => src.Album.Artist.Name))
+                .ForMember(dest => dest.AlbumTitle, opt => opt.MapFrom(src => src.Album.Title));
+
+            CreateMap<Song, SongDetailDto>()
+                .ForMember(dest => dest.ArtistName, opt => opt.MapFrom(src => src.Album.Artist.Name))
+                .ForMember(dest => dest.AlbumTitle, opt => opt.MapFrom(src => src.Album.Title))
+                .ForMember(dest => dest.ArtistImageUrl, opt => opt.MapFrom(src => src.Album.Artist.ImageUrl))
+                .ForMember(dest => dest.AlbumCoverImageUrl, opt => opt.MapFrom(src => src.Album.CoverImageUrl));
+
             CreateMap<Artist, ResultArtistDto>();
             CreateMap<Album, ResultAlbumDto>();
         }

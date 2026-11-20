@@ -9,8 +9,14 @@ namespace SoundWave.Business.Services.Concrete
     {
         public async Task<List<ResultSongDto>> GetAllAsync()
         {
-            var songs = await _repository.GetAllAsync();
+            var songs = await _repository.GetAllWithDetailsAsync();
             return _mapper.Map<List<ResultSongDto>>(songs);
+        }
+
+        public async Task<SongDetailDto> GetSongByIdAsync(int id)
+        {
+            var song = await _repository.GetByIdWithDetailsAsync(id);
+            return _mapper.Map<SongDetailDto>(song);
         }
     }
 }

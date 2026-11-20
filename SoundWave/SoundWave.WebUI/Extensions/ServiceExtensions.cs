@@ -9,6 +9,7 @@ using SoundWave.DataAccess.Repositories.Albums;
 using SoundWave.DataAccess.Repositories.Artists;
 using SoundWave.DataAccess.Repositories.Songs;
 using SoundWave.Entity.Entities;
+using SoundWave.Entity.Enums;
 using System.Security.Claims;
 using System.Text;
 
@@ -90,19 +91,24 @@ namespace SoundWave.WebUI.Extensions
         {
             services.AddAuthorization(options =>
             {
+                options.AddPolicy("CanListenFree", policy =>
+                {
+                    policy.RequireRole(SubscriptionLevel.Free.ToString(), SubscriptionLevel.Standard.ToString(), SubscriptionLevel.Premium.ToString(), SubscriptionLevel.Diamond.ToString());
+                });
+
                 options.AddPolicy("CanListenStandard", policy =>
                 {
-                    policy.RequireRole("Standard", "Premium", "Diamond");
+                    policy.RequireRole(SubscriptionLevel.Standard.ToString(), SubscriptionLevel.Premium.ToString(), SubscriptionLevel.Diamond.ToString());
                 });
 
                 options.AddPolicy("CanListenPremium", policy =>
                 {
-                    policy.RequireRole("Premium", "Diamond");
+                    policy.RequireRole(SubscriptionLevel.Premium.ToString(), SubscriptionLevel.Diamond.ToString());
                 });
 
                 options.AddPolicy("CanListenDiamond", policy =>
                 {
-                    policy.RequireRole("Diamond");
+                    policy.RequireRole(SubscriptionLevel.Diamond.ToString());
                 });
             });
         }
