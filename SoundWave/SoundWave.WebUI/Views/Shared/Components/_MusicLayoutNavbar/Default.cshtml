@@ -1,0 +1,43 @@
+﻿@model SoundWave.WebUI.Models.NavbarViewModel
+@{
+    var (badgeBg, badgeText, badgeIcon) = Model.Role switch
+    {
+        "Diamond" => ("bg-amber-500/15 border-amber-400/40", "text-amber-300", "fa-gem"),
+        "Premium" => ("bg-fuchsia-500/15 border-fuchsia-400/40", "text-fuchsia-300", "fa-crown"),
+        "Standard" => ("bg-cyan-500/15 border-cyan-400/40", "text-cyan-300", "fa-bolt"),
+        _ => ("bg-slate-500/15 border-slate-400/30", "text-slate-300", "fa-headphones")
+    };
+}
+
+<nav class="glass-nav fixed top-0 left-0 right-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+
+            <a asp-controller="Music" asp-action="Discover"
+               class="flex items-center gap-2 font-extrabold text-xl">
+                <i class="fa-solid fa-wave-square gradient-text"></i>
+                <span class="gradient-text">SoundWave</span>
+            </a>
+
+            <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 pl-3 pr-2 py-1.5 rounded-2xl bg-white/[0.04] border border-white/10">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-bold text-white leading-none">@Model.UserName</p>
+                        <span class="inline-flex items-center gap-1 mt-1 px-2 py-0.5 rounded-md border text-[10px] font-bold @badgeBg @badgeText">
+                            <i class="fa-solid @badgeIcon text-[9px]"></i> @Model.Role Üye
+                        </span>
+                    </div>
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-cyan-500 flex items-center justify-center font-extrabold text-sm text-white uppercase">
+                        @Model.UserName.Substring(0, 1)
+                    </div>
+                </div>
+
+                <a asp-controller="Auth" asp-action="Logout" title="Çıkış Yap"
+                   class="w-10 h-10 rounded-xl bg-white/[0.04] hover:bg-rose-500/20 border border-white/10 hover:border-rose-500/40 text-slate-400 hover:text-rose-300 flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</nav>

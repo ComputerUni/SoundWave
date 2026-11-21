@@ -4,6 +4,7 @@ using SoundWave.Business.Services.Abstract;
 using SoundWave.DTO.AuthDtos;
 using SoundWave.DTO.SelectPlanDtos;
 using SoundWave.Entity.Entities;
+using System.Security.Claims;
 
 namespace SoundWave.WebUI.Controllers
 {
@@ -33,7 +34,7 @@ namespace SoundWave.WebUI.Controllers
                 Expires = DateTime.UtcNow.AddMinutes(10)
             });
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Discover", "Music");
         }
 
         [HttpGet]
@@ -72,7 +73,21 @@ namespace SoundWave.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> SelectPlan(SelectPlanDto dto)
         {
-            var userId = (int)TempData["UserId"];
+            int userId;
+
+            if (TempData["UserId"] != null)
+            {
+                userId = (int)TempData["UserId"];
+            }
+
+            else
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userIdClaim == null) return RedirectToAction("Login");
+                userId = int.Parse(userIdClaim);
+            }
+
+
             var token = await _authService.SelectPlanAsync(userId, dto.SubscriptionLevel);
             Response.Cookies.Append("access_token", token, new CookieOptions
             {
@@ -81,7 +96,13 @@ namespace SoundWave.WebUI.Controllers
                 SameSite = SameSiteMode.Strict,
                 Expires = DateTime.UtcNow.AddMinutes(10)
             });
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Discover", "Music");
+        }
+
+        public IActionResult Logout()
+        {
+            Response.Cookies.Delete("access_token");
+            return RedirectToAction("Login", "Auth");
         }
     }
 }

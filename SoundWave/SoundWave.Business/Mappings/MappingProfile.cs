@@ -12,7 +12,8 @@ namespace SoundWave.Business.Mappings
         {
             CreateMap<Song, ResultSongDto>()
                 .ForMember(dest => dest.ArtistName, opt => opt.MapFrom(src => src.Album.Artist.Name))
-                .ForMember(dest => dest.AlbumTitle, opt => opt.MapFrom(src => src.Album.Title));
+                .ForMember(dest => dest.AlbumTitle, opt => opt.MapFrom(src => src.Album.Title))
+                .ForMember(dest => dest.AlbumCoverImageUrl, opt => opt.MapFrom(src => src.Album.CoverImageUrl));
 
             CreateMap<Song, SongDetailDto>()
                 .ForMember(dest => dest.ArtistName, opt => opt.MapFrom(src => src.Album.Artist.Name))

@@ -20,7 +20,7 @@ namespace SoundWave.WebUI.Extensions
         public static void AddBusinessServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtOptions>(configuration.GetSection(nameof(JwtOptions)));
-            services.AddAutoMapper(typeof(MappingProfile));
+            services.AddAutoMapper(cfg => { }, typeof(MappingProfile).Assembly);
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IArtistService, ArtistService>();

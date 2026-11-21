@@ -1,0 +1,85 @@
+﻿@using System.Security.Claims
+@model List<SoundWave.DTO.SongDtos.ResultSongDto>
+@{
+    ViewData["Title"] = "Keşfet";
+    Layout = "~/Views/Shared/_MusicLayout.cshtml";
+
+    var userRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "Free";
+    int userLevel = userRole switch
+    {
+        "Diamond" => 4,
+        "Premium" => 3,
+        "Standard" => 2,
+        _ => 1
+    };
+
+    var qualityInfo = userRole switch
+    {
+        "Diamond" => "FLAC • Stüdyo Kayıtları",
+        "Premium" => "320 kbps + Klipler",
+        "Standard" => "128 kbps • Reklamsız",
+        _ => "64 kbps • Reklamlı"
+    };
+}
+
+<section class="rounded-3xl p-6 sm:p-8 mb-8 bg-gradient-to-r from-purple-950/70 via-slate-900/80 to-cyan-950/70 border border-white/10">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs font-semibold text-cyan-300 mb-3">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                Aktif Yayın Kaliten: <strong class="text-white">@qualityInfo</strong>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">
+                Müziği <span class="gradient-text">Sınır Tanımadan</span> Keşfet
+            </h1>
+            <p class="text-slate-400 text-sm mt-2 max-w-2xl">
+                Mevcut <strong class="text-slate-200">@userRole</strong> paketiniz ile Seviye @userLevel ve altındaki tüm içerikleri dinleyebilirsiniz.
+            </p>
+        </div>
+
+        <div class="flex items-center gap-3 shrink-0">
+            <div class="px-4 py-3 rounded-2xl bg-black/30 border border-white/10 text-center">
+                <p class="text-xl font-extrabold text-white">@Model.Count</p>
+                <p class="text-[11px] text-slate-400">Toplam Parça</p>
+            </div>
+            <div class="px-4 py-3 rounded-2xl bg-black/30 border border-white/10 text-center">
+                <p class="text-xl font-extrabold text-emerald-400">@Model.Count(x => (int)x.SubscriptionLevel <= userLevel)</p>
+                <p class="text-[11px] text-slate-400">Erişilebilir</p>
+            </div>
+            <div class="px-4 py-3 rounded-2xl bg-black/30 border border-white/10 text-center">
+                <p class="text-xl font-extrabold text-amber-400">@Model.Count(x => (int)x.SubscriptionLevel > userLevel)</p>
+                <p class="text-[11px] text-slate-400">Kilitli</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+@await Component.InvokeAsync("_MusicLayoutSongGrid", Model)
+
+@section Scripts {
+    <script>
+        let selectedLevel = 0;
+
+        function setLevelFilter(level, btn) {
+            selectedLevel = level;
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-white', 'text-slate-950', 'font-bold');
+                b.classList.add('bg-white/[0.05]', 'text-slate-300');
+            });
+            btn.classList.remove('bg-white/[0.05]', 'text-slate-300');
+            btn.classList.add('bg-white', 'text-slate-950', 'font-bold');
+            filterSongs();
+        }
+
+        function filterSongs() {
+            const query = (document.getElementById('searchInput')?.value || '').toLowerCase();
+            document.querySelectorAll('.song-card').forEach(card => {
+                const cardLevel = parseInt(card.getAttribute('data-level'));
+                const cardText = card.getAttribute('data-search');
+                const matchesLevel = selectedLevel === 0 || cardLevel === selectedLevel;
+                const matchesSearch = cardText.includes(query);
+                card.style.display = (matchesLevel && matchesSearch) ? 'flex' : 'none';
+            });
+        }
+    </script>
+}

@@ -1,0 +1,108 @@
+﻿@using SoundWave.Entity.Enums
+@model List<SoundWave.DTO.SongDtos.ResultSongDto>
+@{
+    int userLevel = ViewBag.UserLevel;
+}
+
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+    <div class="flex flex-wrap items-center gap-2">
+        <button onclick="setLevelFilter(0, this)" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold bg-white text-slate-950 transition-all cursor-pointer">
+            Tümü
+        </button>
+        <button onclick="setLevelFilter(1, this)" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/[0.05] text-slate-300 hover:bg-white/10 border border-white/10 transition-all cursor-pointer">
+            Free (64 kbps)
+        </button>
+        <button onclick="setLevelFilter(2, this)" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/[0.05] text-cyan-300 hover:bg-cyan-500/15 border border-cyan-500/20 transition-all cursor-pointer">
+            Standard (128 kbps)
+        </button>
+        <button onclick="setLevelFilter(3, this)" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/[0.05] text-fuchsia-300 hover:bg-fuchsia-500/15 border border-fuchsia-500/20 transition-all cursor-pointer">
+            Premium (320 kbps)
+        </button>
+        <button onclick="setLevelFilter(4, this)" class="filter-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/[0.05] text-amber-300 hover:bg-amber-500/15 border border-amber-500/20 transition-all cursor-pointer">
+            <i class="fa-solid fa-gem mr-1"></i> Diamond (FLAC)
+        </button>
+    </div>
+</div>
+
+<div id="songsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+    @foreach (var song in Model)
+    {
+        int reqLevel = (int)song.SubscriptionLevel;
+        bool hasAccess = userLevel >= reqLevel;
+
+        string playActionName = song.SubscriptionLevel switch
+        {
+            SubscriptionLevel.Diamond => "PlayDiamond",
+            SubscriptionLevel.Premium => "PlayPremium",
+            SubscriptionLevel.Standard => "PlayStandard",
+            _ => "PlayFree"
+        };
+
+        var (lvlName, lvlClass, lvlIcon) = song.SubscriptionLevel switch
+        {
+            SubscriptionLevel.Diamond => ("Diamond", "bg-amber-500/20 text-amber-300 border-amber-400/40", "fa-gem"),
+            SubscriptionLevel.Premium => ("Premium", "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/40", "fa-crown"),
+            SubscriptionLevel.Standard => ("Standard", "bg-cyan-500/20 text-cyan-300 border-cyan-400/40", "fa-bolt"),
+            _ => ("Free", "bg-slate-800/90 text-slate-300 border-white/15", "fa-music")
+        };
+
+        <div class="song-card group rounded-2xl glass-card overflow-hidden flex flex-col justify-between transition-all duration-300 @(hasAccess ? "hover:-translate-y-1 hover:border-pink-500/40 hover:shadow-[0_15px_35px_-10px_rgba(236,72,153,0.25)]" : "opacity-85 hover:opacity-100")"
+             data-level="@reqLevel"
+             data-search="@($"{song.Title} {song.ArtistName} {song.AlbumTitle}".ToLower())">
+
+            <div class="relative aspect-square overflow-hidden bg-slate-900">
+                <img src="@(string.IsNullOrEmpty(song.AlbumCoverImageUrl) ? "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=600&q=80" : song.AlbumCoverImageUrl)"
+                     alt="@song.Title"
+                     class="w-full h-full object-cover transition-transform duration-500 @(hasAccess ? "group-hover:scale-105" : "grayscale-[45%] brightness-75")" />
+
+                <div class="absolute inset-0 bg-gradient-to-t from-[#07090E] via-transparent to-black/30"></div>
+
+                <span class="absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border backdrop-blur-md text-[11px] font-bold @lvlClass">
+                    <i class="fa-solid @lvlIcon text-[10px]"></i> @lvlName
+                </span>
+
+                @if (!hasAccess)
+                {
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-950/90 border border-amber-400/40 flex items-center justify-center text-amber-400 shadow-lg">
+                            <i class="fa-solid fa-lock text-lg"></i>
+                        </div>
+                    </div>
+                }
+
+                <div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-[11px] text-slate-300">
+                    <span class="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md">
+                        <i class="fa-regular fa-clock mr-1 text-pink-400"></i>@song.Duration.ToString(@"mm\:ss")
+                    </span>
+                    <span class="px-2 py-0.5 rounded-md bg-black/60 backdrop-blur-md">
+                        <i class="fa-solid fa-headphones mr-1 text-cyan-400"></i>@song.PlayCount.ToString("N0")
+                    </span>
+                </div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col justify-between">
+                <div class="mb-4">
+                    <h3 class="font-bold text-base text-white truncate">@song.Title</h3>
+                    <p class="text-xs text-slate-400 truncate mt-0.5">@song.ArtistName • <span class="text-slate-500">@song.AlbumTitle</span></p>
+                </div>
+
+                @if (hasAccess)
+                {
+                    <a asp-controller="Music" asp-action="@playActionName" asp-route-id="@song.Id"
+                       class="w-full py-2.5 px-4 rounded-xl btn-gradient text-white font-bold text-xs flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Dinle (@lvlName)</span>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Auth" asp-action="SelectPlan" asp-route-id="@song.Id"
+                       class="w-full py-2.5 px-4 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/35 text-amber-300 font-bold text-xs flex items-center justify-center gap-2 transition-all">
+                        <i class="fa-solid fa-lock-open"></i>
+                        <span>Kilidi Aç (@lvlName)</span>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+</div>
