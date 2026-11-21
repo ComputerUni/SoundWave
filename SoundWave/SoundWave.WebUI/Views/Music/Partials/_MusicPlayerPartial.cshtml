@@ -1,0 +1,285 @@
+﻿@using SoundWave.Entity.Enums
+@model SoundWave.DTO.SongDtos.SongDetailDto
+
+@{
+    var coverUrl = string.IsNullOrEmpty(Model.AlbumCoverImageUrl)
+        ? "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=800&q=85"
+        : Model.AlbumCoverImageUrl;
+}
+
+<style>
+    @@keyframes spinVinyl {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    @@keyframes pulseRing {
+        0%, 100% { transform: scale(1); opacity: 0.45; }
+        50% { transform: scale(1.08); opacity: 0.85; }
+    }
+
+    @@keyframes waveDance {
+        0%, 100% { height: 14%; }
+        50% { height: 95%; }
+    }
+
+    .vinyl-spin {
+        animation: spinVinyl 14s linear infinite;
+    }
+
+    .vinyl-paused {
+        animation-play-state: paused;
+    }
+
+    .neon-ring-active {
+        animation: pulseRing 2.6s ease-in-out infinite;
+    }
+
+    .eq-bar {
+        width: 5px;
+        border-radius: 9999px;
+        height: 16%;
+        transition: height 0.2s ease;
+    }
+
+    .eq-playing .eq-bar {
+        animation: waveDance var(--dur, 0.8s) ease-in-out infinite;
+        animation-delay: var(--delay, 0s);
+    }
+</style>
+
+<div class="relative w-full min-h-[calc(100vh-135px)] flex flex-col justify-between rounded-[2rem] overflow-hidden border border-white/10 p-6 sm:p-10 lg:p-14 shadow-[0_25px_90px_-15px_rgba(0,0,0,0.85)]">
+
+    <div class="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
+        <img src="@coverUrl" alt=""
+             class="w-full h-full object-cover scale-125 blur-[90px] opacity-35 saturate-150 transition-all duration-1000" />
+        <div class="absolute inset-0 bg-gradient-to-br from-[#090b14]/90 via-[#0d1021]/80 to-[#080a12]/95"></div>
+        <div id="ambientOrb1" class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-pink-600/20 blur-[110px] transition-all duration-700"></div>
+        <div id="ambientOrb2" class="absolute -bottom-24 -right-24 w-[28rem] h-[28rem] rounded-full bg-cyan-500/20 blur-[120px] transition-all duration-700"></div>
+    </div>
+
+    <div class="flex items-center justify-between z-10">
+        <a asp-controller="Music" asp-action="Discover"
+           class="group inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 hover:border-pink-500/40 text-sm font-semibold text-slate-200 backdrop-blur-md transition-all duration-300">
+            <i class="fa-solid fa-arrow-left text-pink-400 group-hover:-translate-x-1 transition-transform"></i>
+            <span>Keşfet'e Dön</span>
+        </a>
+
+        <div class="hidden sm:flex items-center gap-2 text-xs font-medium text-slate-400 bg-white/[0.04] px-4 py-2 rounded-full border border-white/10 backdrop-blur-md">
+            <span id="liveStatusDot" class="w-2 h-2 rounded-full bg-slate-500"></span>
+            <span id="liveStatusText">Hazır</span>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center my-auto py-8 z-10">
+
+        <div class="lg:col-span-5 flex items-center justify-center">
+            <div class="relative flex items-center justify-center">
+
+                <div id="neonHalo"
+                     class="absolute -inset-5 rounded-full bg-gradient-to-tr from-pink-500/35 via-fuchsia-500/25 to-cyan-400/35 blur-2xl opacity-40 transition-all duration-700"></div>
+
+                <div id="vinylDisc"
+                     class="vinyl-spin vinyl-paused relative w-72 h-72 sm:w-80 sm:h-80 xl:w-96 xl:h-96 rounded-full p-3 bg-gradient-to-br from-white/15 via-white/5 to-transparent border border-white/20 shadow-[0_0_70px_rgba(236,72,153,0.35)]">
+                    <div class="relative w-full h-full rounded-full overflow-hidden">
+                        <img src="@coverUrl" alt="@Model.Title" class="w-full h-full object-cover" />
+                        <div class="absolute inset-0 bg-gradient-to-tr from-black/40 via-transparent to-white/15"></div>
+
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#0b0e1a]/90 border-4 border-white/20 shadow-inner flex items-center justify-center backdrop-blur-md">
+                                <div class="w-4 h-4 rounded-full bg-gradient-to-r from-pink-500 to-cyan-400"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:col-span-7 flex flex-col justify-center">
+
+            <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-300 mb-4">
+                <span class="px-3.5 py-1.5 rounded-xl bg-white/[0.07] border border-white/10 backdrop-blur-md font-medium">
+                    <i class="fa-solid fa-compact-disc mr-1.5 text-pink-400"></i>@Model.AlbumTitle
+                </span>
+                <span class="px-3.5 py-1.5 rounded-xl bg-white/[0.07] border border-white/10 backdrop-blur-md">
+                    <i class="fa-solid fa-headphones mr-1.5 text-cyan-400"></i>
+                    <strong class="text-white font-bold">@Model.PlayCount.ToString("N0")</strong> dinlenme
+                </span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-tight mb-2">
+                @Model.Title
+            </h1>
+            <p class="text-lg sm:text-2xl text-slate-300/90 font-medium mb-8">
+                @Model.ArtistName
+            </p>
+
+            <div id="visualizerContainer" class="flex items-end gap-1.5 h-12 mb-7 px-1">
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.65s; --delay:0.05s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.85s; --delay:0.15s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.55s; --delay:0.25s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.90s; --delay:0.10s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.70s; --delay:0.30s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.60s; --delay:0.20s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.95s; --delay:0.05s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.75s; --delay:0.35s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.58s; --delay:0.12s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.82s; --delay:0.28s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.68s; --delay:0.18s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.88s; --delay:0.40s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.62s; --delay:0.08s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.78s; --delay:0.22s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.54s; --delay:0.32s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.92s; --delay:0.14s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.72s; --delay:0.26s"></span>
+                <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.64s; --delay:0.16s"></span>
+            </div>
+
+            <div id="freeLimitAlert" class="hidden mb-6 p-4 rounded-2xl bg-amber-500/15 border border-amber-400/40 backdrop-blur-md flex items-center justify-between gap-4">
+                <div class="text-xs sm:text-sm text-amber-200">
+                    <i class="fa-solid fa-circle-exclamation text-amber-400 mr-1.5"></i>
+                    <strong>Free Paket Sınırı:</strong> 30 saniyelik önizleme doldu. Tamamını dinlemek için paketinizi yükseltin.
+                </div>
+                <a asp-controller="Auth" asp-action="SelectPlan"
+                   class="shrink-0 px-4 py-2 rounded-xl bg-amber-400 text-slate-950 font-bold text-xs hover:bg-amber-300 transition-all">
+                    Paketi Yükselt
+                </a>
+            </div>
+
+            <audio id="audioPlayer" preload="metadata">
+                <source src="@Model.AudioUrl" type="audio/mpeg" />
+            </audio>
+
+            <div class="mb-7">
+                <input id="seekSlider" type="range" min="0" max="100" value="0"
+                       class="w-full h-2 bg-white/15 rounded-full appearance-none cursor-pointer accent-pink-500 hover:accent-cyan-400 transition-all" />
+                <div class="flex justify-between text-xs sm:text-sm font-mono text-slate-300 mt-2">
+                    <span id="currentTimeLabel">00:00</span>
+                    <span id="totalTimeLabel">@Model.Duration.ToString(@"mm\:ss")</span>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-6">
+                <div class="flex items-center gap-4 sm:gap-5">
+                    <button id="btnRewind" type="button" title="10 saniye geri"
+                            class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/[0.07] hover:bg-white/[0.15] border border-white/10 text-slate-200 text-base flex items-center justify-center backdrop-blur-md hover:scale-105 transition-all cursor-pointer">
+                        <i class="fa-solid fa-backward-step"></i>
+                    </button>
+
+                    <button id="btnPlayPause" type="button"
+                            class="w-16 h-16 sm:w-20 sm:h-20 rounded-3xl btn-gradient text-white text-2xl flex items-center justify-center shadow-[0_0_40px_rgba(236,72,153,0.55)] hover:scale-105 active:scale-95 transition-all cursor-pointer">
+                        <i id="playPauseIcon" class="fa-solid fa-play ml-1"></i>
+                    </button>
+
+                    <button id="btnForward" type="button" title="10 saniye ileri"
+                            class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-white/[0.07] hover:bg-white/[0.15] border border-white/10 text-slate-200 text-base flex items-center justify-center backdrop-blur-md hover:scale-105 transition-all cursor-pointer">
+                        <i class="fa-solid fa-forward-step"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center gap-3 bg-white/[0.06] px-5 py-3.5 rounded-2xl border border-white/10 backdrop-blur-md">
+                    <button id="btnMute" type="button" class="text-slate-200 hover:text-white text-sm cursor-pointer">
+                        <i id="volumeIcon" class="fa-solid fa-volume-high"></i>
+                    </button>
+                    <input id="volumeSlider" type="range" min="0" max="1" step="0.05" value="0.85"
+                           class="w-28 sm:w-32 h-1.5 bg-white/20 rounded-full appearance-none cursor-pointer accent-cyan-400" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center text-[11px] text-slate-400/70 z-10">
+        Oynatmak veya duraklatmak için <kbd class="px-2 py-0.5 rounded bg-white/10 text-slate-200 font-mono">Space</kbd> tuşunu kullanabilirsiniz
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const audio = document.getElementById("audioPlayer");
+        const btnPlayPause = document.getElementById("btnPlayPause");
+        const playPauseIcon = document.getElementById("playPauseIcon");
+        const btnRewind = document.getElementById("btnRewind");
+        const btnForward = document.getElementById("btnForward");
+        const seekSlider = document.getElementById("seekSlider");
+        const currentTimeLabel = document.getElementById("currentTimeLabel");
+        const totalTimeLabel = document.getElementById("totalTimeLabel");
+        const volumeSlider = document.getElementById("volumeSlider");
+        const btnMute = document.getElementById("btnMute");
+        const volumeIcon = document.getElementById("volumeIcon");
+        const vinylDisc = document.getElementById("vinylDisc");
+        const neonHalo = document.getElementById("neonHalo");
+        const visualizerContainer = document.getElementById("visualizerContainer");
+        const freeLimitAlert = document.getElementById("freeLimitAlert");
+        const liveStatusDot = document.getElementById("liveStatusDot");
+        const liveStatusText = document.getElementById("liveStatusText");
+
+        const subscriptionLevel = @((int)Model.SubscriptionLevel);
+
+        function formatTime(sec) {
+            if (isNaN(sec)) return "00:00";
+            const m = Math.floor(sec / 60).toString().padStart(2, "0");
+            const s = Math.floor(sec % 60).toString().padStart(2, "0");
+            return `${m}:${s}`;
+        }
+
+        btnPlayPause.addEventListener("click", () => audio.paused ? audio.play() : audio.pause());
+
+        audio.addEventListener("play", function () {
+            playPauseIcon.classList.remove("fa-play", "ml-1");
+            playPauseIcon.classList.add("fa-pause");
+            vinylDisc.classList.remove("vinyl-paused");
+            neonHalo.classList.add("neon-ring-active");
+            visualizerContainer.classList.add("eq-playing");
+            freeLimitAlert.classList.add("hidden");
+            liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping";
+            liveStatusText.textContent = "Çalıyor";
+        });
+
+        audio.addEventListener("pause", function () {
+            playPauseIcon.classList.remove("fa-pause");
+            playPauseIcon.classList.add("fa-play", "ml-1");
+            vinylDisc.classList.add("vinyl-paused");
+            neonHalo.classList.remove("neon-ring-active");
+            visualizerContainer.classList.remove("eq-playing");
+            liveStatusDot.className = "w-2 h-2 rounded-full bg-amber-400";
+            liveStatusText.textContent = "Duraklatıldı";
+        });
+
+        audio.addEventListener("timeupdate", function () {
+            if (audio.duration) {
+                seekSlider.value = (audio.currentTime / audio.duration) * 100;
+                currentTimeLabel.textContent = formatTime(audio.currentTime);
+                totalTimeLabel.textContent = formatTime(audio.duration);
+            }
+            if (subscriptionLevel === 1 && audio.currentTime >= 30) {
+                audio.pause();
+                audio.currentTime = 0;
+                freeLimitAlert.classList.remove("hidden");
+            }
+        });
+
+        seekSlider.addEventListener("input", () => {
+            if (audio.duration) audio.currentTime = (seekSlider.value / 100) * audio.duration;
+        });
+
+        btnRewind.addEventListener("click", () => audio.currentTime = Math.max(0, audio.currentTime - 10));
+        btnForward.addEventListener("click", () => audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 10));
+
+        volumeSlider.addEventListener("input", () => {
+            audio.volume = volumeSlider.value;
+            volumeIcon.className = audio.volume == 0 ? "fa-solid fa-volume-xmark text-pink-400" : "fa-solid fa-volume-high";
+        });
+
+        btnMute.addEventListener("click", () => {
+            audio.muted = !audio.muted;
+            volumeIcon.className = audio.muted ? "fa-solid fa-volume-xmark text-pink-400" : "fa-solid fa-volume-high";
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.code === "Space" && document.activeElement.tagName !== "INPUT") {
+                e.preventDefault();
+                btnPlayPause.click();
+            }
+        });
+    });
+</script>

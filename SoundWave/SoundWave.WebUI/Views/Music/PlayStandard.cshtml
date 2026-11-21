@@ -1,0 +1,7 @@
+﻿@model SoundWave.DTO.SongDtos.SongDetailDto
+@{
+    ViewData["Title"] = $"{Model.Title} - Dinle";
+    Layout = "~/Views/Shared/_MusicLayout.cshtml";
+}
+
+@await Html.PartialAsync("~/Views/Music/Partials/_MusicPlayerPartial.cshtml", Model)
