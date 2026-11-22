@@ -24,6 +24,9 @@
     };
 
     radios.forEach(radio => {
+        if(radio.checked) {
+            submitBtnText?.innerText = planLabels[radio.value] || 'Seçili Paket ile Devam Et';
+        }
         radio.addEventListener('change', (e) => {
             const selectedVal = e.target.value;
             submitBtnText.innerText = planLabels[selectedVal] || 'Seçili Paket ile Devam Et';

@@ -135,17 +135,6 @@
                 <span class="eq-bar bg-gradient-to-t from-pink-600 to-cyan-400" style="--dur:0.64s; --delay:0.16s"></span>
             </div>
 
-            <div id="freeLimitAlert" class="hidden mb-6 p-4 rounded-2xl bg-amber-500/15 border border-amber-400/40 backdrop-blur-md flex items-center justify-between gap-4">
-                <div class="text-xs sm:text-sm text-amber-200">
-                    <i class="fa-solid fa-circle-exclamation text-amber-400 mr-1.5"></i>
-                    <strong>Free Paket Sınırı:</strong> 30 saniyelik önizleme doldu. Tamamını dinlemek için paketinizi yükseltin.
-                </div>
-                <a asp-controller="Auth" asp-action="SelectPlan"
-                   class="shrink-0 px-4 py-2 rounded-xl bg-amber-400 text-slate-950 font-bold text-xs hover:bg-amber-300 transition-all">
-                    Paketi Yükselt
-                </a>
-            </div>
-
             <audio id="audioPlayer" preload="metadata">
                 <source src="@Model.AudioUrl" type="audio/mpeg" />
             </audio>
@@ -209,11 +198,8 @@
         const vinylDisc = document.getElementById("vinylDisc");
         const neonHalo = document.getElementById("neonHalo");
         const visualizerContainer = document.getElementById("visualizerContainer");
-        const freeLimitAlert = document.getElementById("freeLimitAlert");
         const liveStatusDot = document.getElementById("liveStatusDot");
         const liveStatusText = document.getElementById("liveStatusText");
-
-        const subscriptionLevel = @((int)Model.SubscriptionLevel);
 
         function formatTime(sec) {
             if (isNaN(sec)) return "00:00";
@@ -230,7 +216,6 @@
             vinylDisc.classList.remove("vinyl-paused");
             neonHalo.classList.add("neon-ring-active");
             visualizerContainer.classList.add("eq-playing");
-            freeLimitAlert.classList.add("hidden");
             liveStatusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping";
             liveStatusText.textContent = "Çalıyor";
         });
@@ -250,11 +235,6 @@
                 seekSlider.value = (audio.currentTime / audio.duration) * 100;
                 currentTimeLabel.textContent = formatTime(audio.currentTime);
                 totalTimeLabel.textContent = formatTime(audio.duration);
-            }
-            if (subscriptionLevel === 1 && audio.currentTime >= 30) {
-                audio.pause();
-                audio.currentTime = 0;
-                freeLimitAlert.classList.remove("hidden");
             }
         });
 

@@ -17,6 +17,13 @@ builder.Services.AddIdentityServices();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddAuthorizationPolicies();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Auth/Login";
+    options.LogoutPath = "/Auth/Logout";
+    options.AccessDeniedPath = "/Auth/AccessDenied";
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -32,6 +39,21 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
+
+app.UseStatusCodePages(async context =>
+{
+    var response = context.HttpContext.Response;
+
+    if (response.StatusCode == StatusCodes.Status403Forbidden)
+    {
+        response.Redirect("/Auth/AccessDenied");
+    }
+    else if (response.StatusCode == StatusCodes.Status401Unauthorized)
+    {
+        response.Redirect("/Auth/Login");
+    }
+
+});
 
 app.UseRouting();
 

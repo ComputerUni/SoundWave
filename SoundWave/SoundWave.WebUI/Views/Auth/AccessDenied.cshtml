@@ -1,0 +1,174 @@
+﻿@{
+    ViewData["Title"] = "Erişim Kısıtlandı • VIP İçerik";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr" class="dark">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MyAcademy SoundWave</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+            body {
+                font-family: 'Plus Jakarta Sans', sans-serif;
+                background-color: #070912;
+            }
+
+            @@keyframes floatLock {
+                0%, 100% { transform: translateY(0px) rotate(0deg); }
+                50% { transform: translateY(-8px) rotate(2deg); }
+            }
+
+            @@keyframes pulseAura {
+                0%, 100% { transform: scale(1); opacity: 0.45; }
+                50% { transform: scale(1.12); opacity: 0.85; }
+            }
+
+            .lock-float {
+                animation: floatLock 4s ease-in-out infinite;
+            }
+
+            .aura-pulse {
+                animation: pulseAura 3.5s ease-in-out infinite;
+            }
+
+            .glass-panel {
+                background: rgba(15, 19, 36, 0.72);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+            }
+
+            .btn-vip {
+                background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 50%, #06b6d4 100%);
+                background-size: 200% 200%;
+                transition: all 0.35s ease;
+            }
+
+            .btn-vip:hover {
+                background-position: right center;
+                box-shadow: 0 0 35px rgba(236, 72, 153, 0.55);
+                transform: translateY(-2px);
+            }
+    </style>
+</head>
+<body class="min-h-screen text-slate-200 flex items-center justify-center p-4 sm:p-8 relative overflow-x-hidden selection:bg-pink-500 selection:text-white">
+
+    <!-- Arka Plan Dinamik Neon Işık Küreleri ve Izgara Dokusu -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.14),_transparent_50%),radial-gradient(circle_at_bottom_right,_rgba(6,182,212,0.14),_transparent_50%)]"></div>
+        <div class="absolute top-1/4 -left-24 w-96 h-96 rounded-full bg-pink-600/20 blur-[130px]"></div>
+        <div class="absolute bottom-1/4 -right-24 w-96 h-96 rounded-full bg-cyan-500/20 blur-[130px]"></div>
+        <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 48px 48px;"></div>
+    </div>
+
+    <!-- Ana Glassmorphism Konteyner -->
+    <div class="w-full max-w-3xl glass-panel border border-white/10 rounded-[2.25rem] p-7 sm:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.85)] relative overflow-hidden">
+
+        <!-- Üst İnce Neon Çizgi -->
+        <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-80"></div>
+
+        <!-- Üst Marka & Durum Rozeti -->
+        <div class="flex items-center justify-between gap-4 mb-10">
+            <a asp-controller="Music" asp-action="Discover" class="inline-flex items-center gap-2.5 group">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-pink-500 to-cyan-400 flex items-center justify-center text-white shadow-lg">
+                    <i class="fa-solid fa-wave-square text-sm"></i>
+                </div>
+                <span class="font-extrabold tracking-tight text-white text-base">
+                    Sound<span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-cyan-400">Wave</span>
+                </span>
+            </a>
+
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold tracking-wider uppercase">
+                <span class="w-2 h-2 rounded-full bg-rose-400 animate-ping"></span>
+                403 • Yetki Sınırı
+            </span>
+        </div>
+
+        <!-- Orta Kilit Animasyonu ve Mesaj -->
+        <div class="text-center max-w-xl mx-auto">
+            <div class="relative inline-flex items-center justify-center mb-7">
+                <!-- Dış Neon Hale -->
+                <div class="aura-pulse absolute -inset-4 rounded-full bg-gradient-to-tr from-pink-500/40 via-purple-500/30 to-cyan-400/40 blur-xl"></div>
+
+                <!-- Kilit İkonu Kutusu -->
+                <div class="lock-float relative w-24 h-24 rounded-3xl bg-gradient-to-b from-white/15 to-white/[0.03] border border-white/20 flex items-center justify-center shadow-2xl backdrop-blur-xl">
+                    <i class="fa-solid fa-lock text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-pink-400 via-fuchsia-300 to-cyan-300"></i>
+
+                    <!-- Sağ Alt VIP Yıldız Rozeti -->
+                    <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-xs font-black shadow-lg border-2 border-[#0b0f1e]">
+                        <i class="fa-solid fa-crown"></i>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-3">
+                Bu Parça Üst Seviye Abonelik Gerektiriyor
+            </h1>
+
+            <p class="text-sm sm:text-base text-slate-400 leading-relaxed mb-8">
+                Dinlemek istediğiniz parça <strong class="text-slate-200">Standard, Premium veya Diamond</strong> abonelik katmanına özeldir. Mevcut paketinizle bu içeriğe erişim yetkiniz bulunmuyor.
+            </p>
+        </div>
+
+        <!-- Paket Avantaj Kartları (Görsel Önizleme) -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-9">
+            <div class="p-4 rounded-2xl bg-white/[0.03] border border-cyan-500/20 hover:border-cyan-400/40 transition-all">
+                <div class="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase mb-1">
+                    <i class="fa-solid fa-bolt"></i> Standard
+                </div>
+                <p class="text-xs text-slate-400">Kesintisiz tam uzunlukta parça dinleme ve yüksek kalite akış.</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white/[0.04] border border-fuchsia-500/30 hover:border-fuchsia-400/50 transition-all">
+                <div class="flex items-center gap-2 text-fuchsia-400 text-xs font-bold uppercase mb-1">
+                    <i class="fa-solid fa-gem"></i> Premium
+                </div>
+                <p class="text-xs text-slate-400">320 kbps stüdyo kalitesi ve özel albüm koleksiyonlarına erişim.</p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-white/[0.04] border border-amber-400/30 hover:border-amber-400/50 transition-all">
+                <div class="flex items-center gap-2 text-amber-300 text-xs font-bold uppercase mb-1">
+                    <i class="fa-solid fa-crown"></i> Diamond
+                </div>
+                <p class="text-xs text-slate-400">24-bit Lossless FLAC master kayıtlar ve sınırsız VIP katalog.</p>
+            </div>
+        </div>
+
+        <!-- Aksiyon Butonları -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
+            <a asp-controller="Auth" asp-action="SelectPlan"
+               class="w-full sm:w-auto btn-vip px-7 py-3.5 rounded-2xl text-white font-bold text-sm inline-flex items-center justify-center gap-2.5 shadow-lg">
+                <i class="fa-solid fa-crown text-amber-300"></i>
+                <span>Paketini Yükselt</span>
+            </a>
+
+            <a asp-controller="Music" asp-action="Discover"
+               class="w-full sm:w-auto px-6 py-3.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 text-slate-200 font-semibold text-sm inline-flex items-center justify-center gap-2 transition-all">
+                <i class="fa-solid fa-compass text-cyan-400"></i>
+                <span>Keşfet'e Dön</span>
+            </a>
+
+            <button type="button" onclick="history.back()"
+                    class="w-full sm:w-auto px-5 py-3.5 rounded-2xl text-slate-400 hover:text-white text-sm font-medium inline-flex items-center justify-center gap-2 transition-colors cursor-pointer">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Geri Git</span>
+            </button>
+        </div>
+
+        <!-- Alt Bilgi -->
+        <div class="mt-9 pt-6 border-t border-white/[0.07] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+            <span>Farklı bir hesapla giriş yapmak ister misiniz?</span>
+            <a asp-controller="Auth" asp-action="Login" class="text-pink-400 hover:text-pink-300 font-semibold transition-colors">
+                Hesap Değiştir / Giriş Yap →
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

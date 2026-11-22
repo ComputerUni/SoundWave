@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SoundWave.Business.Services.Abstract;
 using SoundWave.DTO.AuthDtos;
 using SoundWave.DTO.SelectPlanDtos;
 using SoundWave.Entity.Entities;
+using SoundWave.Entity.Enums;
 using System.Security.Claims;
 
 namespace SoundWave.WebUI.Controllers
@@ -65,9 +67,27 @@ namespace SoundWave.WebUI.Controllers
 
 
         [HttpGet]
-        public IActionResult SelectPlan()
+        public async Task<IActionResult> SelectPlan(SubscriptionLevel? targetLevel)
         {
-            return View();
+            SubscriptionLevel currentLevel = SubscriptionLevel.Free;
+            if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if(user != null)
+                {
+                    currentLevel = user.SubscriptionLevel;
+                }
+            }
+
+            ViewBag.CurrentLevel = currentLevel;
+            ViewBag.TargetLevel = targetLevel;
+
+            var model = new SelectPlanDto
+            {
+                SubscriptionLevel = currentLevel
+            };
+
+            return View(model);
         }
 
         [HttpPost]
@@ -103,6 +123,12 @@ namespace SoundWave.WebUI.Controllers
         {
             Response.Cookies.Delete("access_token");
             return RedirectToAction("Login", "Auth");
+        }
+
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

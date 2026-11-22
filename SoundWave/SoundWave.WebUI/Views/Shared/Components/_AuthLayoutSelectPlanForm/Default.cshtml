@@ -1,6 +1,12 @@
 ﻿@using SoundWave.Entity.Enums
 @model SoundWave.DTO.SelectPlanDtos.SelectPlanDto
 
+@{
+    SubscriptionLevel currentPlan = ViewBag.CurrentLevel != null ? (SubscriptionLevel)ViewBag.CurrentLevel : Model.SubscriptionLevel;
+    SubscriptionLevel selectedPlan = Model?.SubscriptionLevel ?? SubscriptionLevel.Free;
+
+}
+
 <main class="relative z-10 max-w-6xl w-full mx-auto my-auto">
 
     <div class="text-center max-w-2xl mx-auto mb-10">
@@ -11,7 +17,7 @@
             Sana Uygun <span class="gradient-text">Ses Deneyimini</span> Seç
         </h1>
         <p class="text-slate-400 text-sm sm:text-base mt-3">
-            Seçtiğin abonelik seviyesi JWT yetki anahtarına anında tanımlanır. Üst paketler, alt paketlerin tüm arşivine sınırsız erişim sağlar[cite: 1].
+            Seçtiğin abonelik seviyesi JWT yetki anahtarına anında tanımlanır. Üst paketler, alt paketlerin tüm arşivine sınırsız erişim sağlar.
         </p>
     </div>
 
@@ -21,7 +27,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
 
             <label class="cursor-pointer block relative group">
-                <input type="radio" asp-for="SubscriptionLevel" value="@SubscriptionLevel.Free" data-theme="free" class="plan-radio sr-only" />
+                <input type="radio" name="SubscriptionLevel" value="@SubscriptionLevel.Free" checked="@(selectedPlan == SubscriptionLevel.Free ? "checked" : null)" data-theme="free" class="plan-radio sr-only" />
                 <div class="plan-card h-full rounded-3xl p-6 glass-card border border-white/10 flex flex-col justify-between relative">
                     <div>
                         <div class="flex items-center justify-between mb-4">
@@ -44,7 +50,7 @@
                         <ul class="space-y-3 text-xs text-slate-300">
                             <li class="flex items-center gap-2.5">
                                 <i class="fa-solid fa-circle-check text-slate-400"></i>
-                                <span><strong>64 kbps</strong> standart ses kalitesi[cite: 1]</span>
+                                <span><strong>64 kbps</strong> standart ses kalitesi</span>
                             </li>
                             <li class="flex items-center gap-2.5">
                                 <i class="fa-solid fa-circle-check text-slate-400"></i>
@@ -52,7 +58,7 @@
                             </li>
                             <li class="flex items-center gap-2.5 text-slate-500">
                                 <i class="fa-solid fa-volume-low"></i>
-                                <span>Reklam destekli dinleme[cite: 1]</span>
+                                <span>Reklam destekli dinleme</span>
                             </li>
                             <li class="flex items-center gap-2.5 text-slate-600 line-through">
                                 <i class="fa-solid fa-xmark"></i>
@@ -68,7 +74,7 @@
             </label>
 
             <label class="cursor-pointer block relative group">
-                <input type="radio" asp-for="SubscriptionLevel" value="@SubscriptionLevel.Standard" data-theme="standard" class="plan-radio sr-only" />
+                <input type="radio" name="SubscriptionLevel" value="@SubscriptionLevel.Standard" checked="@(selectedPlan == SubscriptionLevel.Standard ? "checked" : null)" data-theme="standard" class="plan-radio sr-only" />
                 <div class="plan-card h-full rounded-3xl p-6 glass-card border border-cyan-500/20 flex flex-col justify-between relative">
                     <div>
                         <div class="flex items-center justify-between mb-4">
@@ -115,7 +121,7 @@
             </label>
 
             <label class="cursor-pointer block relative group">
-                <input type="radio" asp-for="SubscriptionLevel" value="@SubscriptionLevel.Premium" data-theme="premium" checked class="plan-radio sr-only" />
+                <input type="radio" name="SubscriptionLevel" value="@SubscriptionLevel.Premium" checked="@(selectedPlan == SubscriptionLevel.Premium ? "checked" : null)" data-theme="premium" class="plan-radio sr-only" />
                 <div class="plan-card h-full rounded-3xl p-6 glass-card border-2 border-pink-500/40 flex flex-col justify-between relative">
 
                     <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3.5 py-1 rounded-full btn-gradient text-[10px] font-extrabold uppercase tracking-wider text-white shadow-lg">
@@ -167,7 +173,7 @@
             </label>
 
             <label class="cursor-pointer block relative group">
-                <input type="radio" asp-for="SubscriptionLevel" value="@SubscriptionLevel.Diamond" data-theme="diamond" class="plan-radio sr-only" />
+                <input type="radio" name="SubscriptionLevel" value="@SubscriptionLevel.Diamond" checked="@(selectedPlan == SubscriptionLevel.Diamond ? "checked" : null)" data-theme="diamond" class="plan-radio sr-only" />
                 <div class="plan-card h-full rounded-3xl p-6 glass-card border border-amber-500/30 bg-gradient-to-b from-amber-500/[0.06] to-transparent flex flex-col justify-between relative">
                     <div>
                         <div class="flex items-center justify-between mb-4">
@@ -218,7 +224,7 @@
         <div class="max-w-md mx-auto text-center">
             <button type="submit" id="submitBtn" class="w-full py-4 px-8 rounded-2xl font-extrabold text-sm text-white btn-gradient shadow-xl flex items-center justify-center gap-3 cursor-pointer">
                 <i class="fa-solid fa-wand-magic-sparkles"></i>
-                <span id="submitBtnText">Premium Paket ile Keşfetmeye Başla</span>
+                <span id="submitBtnText">@selectedPlan Paket ile Keşfetmeye Başla</span>
                 <i class="fa-solid fa-arrow-right text-xs"></i>
             </button>
             <p class="text-[11px] text-slate-500 mt-3">
