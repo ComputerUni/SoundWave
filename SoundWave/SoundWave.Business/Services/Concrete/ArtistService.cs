@@ -12,5 +12,11 @@ namespace SoundWave.Business.Services.Concrete
             var artists = await _repository.GetAllAsync();
             return _mapper.Map<List<ResultArtistDto>>(artists);
         }
+
+        public async Task<ArtistDetailDto> GetArtistWithDetailsAsync(int id)
+        {
+            var artist = await _repository.GetArtistWithDetailsAsync(id);
+            return _mapper.Map<ArtistDetailDto>(artist);
+        }
     }
 }

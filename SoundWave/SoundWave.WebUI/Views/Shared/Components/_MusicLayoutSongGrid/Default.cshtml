@@ -83,7 +83,12 @@
             <div class="p-4 flex-1 flex flex-col justify-between">
                 <div class="mb-4">
                     <h3 class="font-bold text-base text-white truncate">@song.Title</h3>
-                    <p class="text-xs text-slate-400 truncate mt-0.5">@song.ArtistName • <span class="text-slate-500">@song.AlbumTitle</span></p>
+                    <p class="text-xs text-slate-400 truncate mt-0.5">
+                        <a asp-controller="Artist" asp-action="Detail" asp-route-id="@song.ArtistId" class="hover:text-pink-400 hover:underline transition-colors font-medium">
+                            @song.ArtistName
+                        </a>
+                        • <span class="text-slate-500">@song.AlbumTitle</span>
+                    </p>
                 </div>
 
                 @if (hasAccess)

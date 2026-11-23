@@ -15,6 +15,7 @@ namespace SoundWave.DTO.SongDtos
         public int PlayCount { get; set; }
         public SubscriptionLevel SubscriptionLevel { get; set; }
         public string AlbumTitle { get; set; }
+        public int ArtistId { get; set; }
         public string ArtistName { get; set; }
         public string AlbumCoverImageUrl { get; set; }
     }

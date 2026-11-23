@@ -59,7 +59,6 @@
 </head>
 <body class="min-h-screen text-slate-200 flex items-center justify-center p-4 sm:p-8 relative overflow-x-hidden selection:bg-pink-500 selection:text-white">
 
-    <!-- Arka Plan Dinamik Neon Işık Küreleri ve Izgara Dokusu -->
     <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(236,72,153,0.14),_transparent_50%),radial-gradient(circle_at_bottom_right,_rgba(6,182,212,0.14),_transparent_50%)]"></div>
         <div class="absolute top-1/4 -left-24 w-96 h-96 rounded-full bg-pink-600/20 blur-[130px]"></div>
@@ -67,13 +66,10 @@
         <div class="absolute inset-0 opacity-[0.03]" style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 48px 48px;"></div>
     </div>
 
-    <!-- Ana Glassmorphism Konteyner -->
     <div class="w-full max-w-3xl glass-panel border border-white/10 rounded-[2.25rem] p-7 sm:p-12 shadow-[0_30px_100px_rgba(0,0,0,0.85)] relative overflow-hidden">
 
-        <!-- Üst İnce Neon Çizgi -->
         <div class="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-pink-500 to-transparent opacity-80"></div>
 
-        <!-- Üst Marka & Durum Rozeti -->
         <div class="flex items-center justify-between gap-4 mb-10">
             <a asp-controller="Music" asp-action="Discover" class="inline-flex items-center gap-2.5 group">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-pink-500 to-cyan-400 flex items-center justify-center text-white shadow-lg">
@@ -90,17 +86,11 @@
             </span>
         </div>
 
-        <!-- Orta Kilit Animasyonu ve Mesaj -->
         <div class="text-center max-w-xl mx-auto">
             <div class="relative inline-flex items-center justify-center mb-7">
-                <!-- Dış Neon Hale -->
                 <div class="aura-pulse absolute -inset-4 rounded-full bg-gradient-to-tr from-pink-500/40 via-purple-500/30 to-cyan-400/40 blur-xl"></div>
-
-                <!-- Kilit İkonu Kutusu -->
                 <div class="lock-float relative w-24 h-24 rounded-3xl bg-gradient-to-b from-white/15 to-white/[0.03] border border-white/20 flex items-center justify-center shadow-2xl backdrop-blur-xl">
                     <i class="fa-solid fa-lock text-4xl text-transparent bg-clip-text bg-gradient-to-tr from-pink-400 via-fuchsia-300 to-cyan-300"></i>
-
-                    <!-- Sağ Alt VIP Yıldız Rozeti -->
                     <div class="absolute -bottom-2 -right-2 w-8 h-8 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-xs font-black shadow-lg border-2 border-[#0b0f1e]">
                         <i class="fa-solid fa-crown"></i>
                     </div>
@@ -116,7 +106,6 @@
             </p>
         </div>
 
-        <!-- Paket Avantaj Kartları (Görsel Önizleme) -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 mb-9">
             <div class="p-4 rounded-2xl bg-white/[0.03] border border-cyan-500/20 hover:border-cyan-400/40 transition-all">
                 <div class="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase mb-1">
@@ -140,7 +129,6 @@
             </div>
         </div>
 
-        <!-- Aksiyon Butonları -->
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <a asp-controller="Auth" asp-action="SelectPlan"
                class="w-full sm:w-auto btn-vip px-7 py-3.5 rounded-2xl text-white font-bold text-sm inline-flex items-center justify-center gap-2.5 shadow-lg">
@@ -161,7 +149,6 @@
             </button>
         </div>
 
-        <!-- Alt Bilgi -->
         <div class="mt-9 pt-6 border-t border-white/[0.07] flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
             <span>Farklı bir hesapla giriş yapmak ister misiniz?</span>
             <a asp-controller="Auth" asp-action="Login" class="text-pink-400 hover:text-pink-300 font-semibold transition-colors">
