@@ -87,7 +87,10 @@
                         <a asp-controller="Artist" asp-action="Detail" asp-route-id="@song.ArtistId" class="hover:text-pink-400 hover:underline transition-colors font-medium">
                             @song.ArtistName
                         </a>
-                        • <span class="text-slate-500">@song.AlbumTitle</span>
+                        • 
+                         <a asp-controller="Album" asp-action="Detail" asp-route-id="@song.AlbumId" class="hover:text-pink-400 hover:underline transition-colors font-medium">
+                            @song.AlbumTitle
+                        </a>
                     </p>
                 </div>
 

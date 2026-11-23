@@ -8,5 +8,6 @@ namespace SoundWave.DataAccess.Repositories.Albums
 {
     public interface IAlbumRepository : IGenericRepository<Album>
     {
+        Task<Album> GetAlbumWithDetailsAsync(int id);
     }
 }

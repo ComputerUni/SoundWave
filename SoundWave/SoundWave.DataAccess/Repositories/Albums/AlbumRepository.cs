@@ -1,4 +1,5 @@
-﻿using SoundWave.DataAccess.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using SoundWave.DataAccess.Context;
 using SoundWave.DataAccess.Repositories.GenericRepositories;
 using SoundWave.Entity.Entities;
 using System;
@@ -11,6 +12,11 @@ namespace SoundWave.DataAccess.Repositories.Albums
     {
         public AlbumRepository(AppDbContext context) : base(context)
         {
+        }
+
+        public async Task<Album> GetAlbumWithDetailsAsync(int id)
+        {
+            return await _context.Albums.AsNoTracking().Include(x => x.Songs).Include(x => x.Artist).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);
         }
     }
 }
