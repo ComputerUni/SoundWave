@@ -1,0 +1,26 @@
+﻿@model SoundWave.DTO.ArtistDtos.AlbumWithSongsDto
+
+@{
+    var firstSong = Model.Songs?.FirstOrDefault();
+    string artistName = firstSong?.ArtistName ?? "Sanatçı";
+    int artistId = firstSong?.ArtistId ?? 0;
+}
+
+
+<div class="flex flex-wrap items-center justify-between gap-4 mb-10 z-10 relative">
+    <a asp-controller="Music" asp-action="Discover"
+       class="group inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 hover:border-pink-500/40 text-sm font-semibold text-slate-200 backdrop-blur-md transition-all duration-300">
+        <i class="fa-solid fa-arrow-left text-pink-400 group-hover:-translate-x-1 transition-transform"></i>
+        <span>Keşfet'e Dön</span>
+    </a>
+
+    @if (artistId > 0)
+    {
+        <a asp-controller="Artist" asp-action="Detail" asp-route-id="@artistId"
+           class="group inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl bg-white/[0.05] hover:bg-pink-500/15 border border-white/10 hover:border-pink-500/40 text-xs sm:text-sm font-semibold text-slate-200 backdrop-blur-md transition-all">
+            <i class="fa-solid fa-microphone-lines text-cyan-400"></i>
+            <span>@artistName Profili</span>
+            <i class="fa-solid fa-chevron-right text-[10px] text-slate-400 group-hover:translate-x-0.5 transition-transform"></i>
+        </a>
+    }
+</div>

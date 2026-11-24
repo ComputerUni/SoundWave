@@ -1,0 +1,116 @@
+﻿@using SoundWave.Entity.Enums
+@model SoundWave.DTO.ArtistDtos.AlbumWithSongsDto
+
+@{
+    int userLevel = ViewBag.UserLevel ?? 1;
+
+    var coverUrl = string.IsNullOrEmpty(Model.CoverImageUrl)
+        ? "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=800&q=85"
+        : Model.CoverImageUrl;
+
+    var firstSong = Model.Songs?.FirstOrDefault();
+    string artistName = firstSong?.ArtistName ?? "Sanatçı";
+    int artistId = firstSong?.ArtistId ?? 0;
+
+    var totalDuration = TimeSpan.FromTicks(Model.Songs?.Sum(s => s.Duration.Ticks) ?? 0);
+    long totalPlays = Model.Songs?.Sum(s => (long)s.PlayCount) ?? 0;
+
+    var firstPlayableSong = Model.Songs?.FirstOrDefault(s => userLevel >= (int)s.SubscriptionLevel);
+    string firstPlayAction = firstPlayableSong?.SubscriptionLevel switch
+    {
+        SubscriptionLevel.Diamond => "PlayDiamond",
+        SubscriptionLevel.Premium => "PlayPremium",
+        SubscriptionLevel.Standard => "PlayStandard",
+        _ => "PlayFree"
+    };
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-12 z-10 relative">
+
+    <div class="lg:col-span-5 flex items-center justify-center">
+        <div class="relative group flex items-center justify-center py-4 pr-8 sm:pr-12">
+
+            <div class="absolute -inset-4 rounded-full bg-gradient-to-tr from-pink-500/30 via-fuchsia-500/20 to-cyan-400/30 blur-2xl opacity-60 group-hover:opacity-90 transition-opacity duration-700"></div>
+
+            <div class="album-cover-float absolute right-0 sm:right-2 w-52 h-52 sm:w-64 sm:h-64 rounded-full bg-gradient-to-br from-slate-900 via-zinc-950 to-black border border-white/15 shadow-2xl flex items-center justify-center transition-transform duration-700 group-hover:translate-x-4 group-hover:rotate-45">
+                <div class="w-44 h-44 sm:w-52 sm:h-52 rounded-full border border-white/[0.06] flex items-center justify-center">
+                    <div class="w-32 h-32 sm:w-40 sm:h-40 rounded-full border border-white/[0.06] flex items-center justify-center">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full overflow-hidden border-2 border-pink-500/50 relative">
+                            <img src="@coverUrl" alt="" class="w-full h-full object-cover opacity-80" />
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-3.5 h-3.5 rounded-full bg-[#090b14] border border-white/30"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative w-56 h-56 sm:w-72 sm:h-72 rounded-3xl overflow-hidden border-2 border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.85)] z-10">
+                <img src="@coverUrl" alt="@Model.Title" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-tr from-black/30 via-transparent to-white/15"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left">
+
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 mb-4">
+            <span class="px-3.5 py-1.5 rounded-xl bg-pink-500/15 border border-pink-500/35 text-pink-300 text-xs font-extrabold tracking-wider uppercase backdrop-blur-md">
+                <i class="fa-solid fa-compact-disc mr-1.5"></i>Stüdyo Albümü
+            </span>
+            <span class="px-3.5 py-1.5 rounded-xl bg-white/[0.07] border border-white/10 text-cyan-300 text-xs font-bold backdrop-blur-md">
+                <i class="fa-regular fa-calendar mr-1.5"></i>@Model.ReleaseYear
+            </span>
+        </div>
+
+        <h1 class="text-3xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-tight mb-3">
+            @Model.Title
+        </h1>
+
+        <div class="mb-7">
+            @if (artistId > 0)
+            {
+                <a asp-controller="Artist" asp-action="Detail" asp-route-id="@artistId"
+                   class="text-lg sm:text-2xl font-bold text-slate-200 hover:text-pink-400 transition-colors">
+                    @artistName
+                </a>
+            }
+            else
+            {
+                <span class="text-lg sm:text-2xl font-bold text-slate-300">@artistName</span>
+            }
+        </div>
+
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs sm:text-sm text-slate-300 mb-8">
+            <div class="px-4 py-2.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center gap-2">
+                <i class="fa-solid fa-music text-pink-400"></i>
+                <span><strong class="text-white">@(Model.Songs?.Count ?? 0)</strong> Parça</span>
+            </div>
+            <div class="px-4 py-2.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center gap-2">
+                <i class="fa-regular fa-clock text-cyan-400"></i>
+                <span><strong class="text-white">@((int)totalDuration.TotalMinutes) dk @totalDuration.Seconds sn</strong></span>
+            </div>
+            <div class="px-4 py-2.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center gap-2">
+                <i class="fa-solid fa-headphones text-fuchsia-400"></i>
+                <span><strong class="text-white">@totalPlays.ToString("N0")</strong> Dinlenme</span>
+            </div>
+        </div>
+
+        @if (firstPlayableSong != null)
+        {
+            <a asp-controller="Music" asp-action="@firstPlayAction" asp-route-id="@firstPlayableSong.Id"
+               class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl btn-gradient text-white font-extrabold text-sm sm:text-base shadow-[0_0_40px_rgba(236,72,153,0.45)] hover:scale-105 active:scale-95 transition-all">
+                <i class="fa-solid fa-play text-base"></i>
+                <span>Albümü Çalmaya Başla</span>
+            </a>
+        }
+        else if (Model.Songs != null && Model.Songs.Any())
+        {
+            <a asp-controller="Auth" asp-action="SelectPlan"
+               class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-amber-500/15 hover:bg-amber-500/25 border border-amber-400/40 text-amber-300 font-extrabold text-sm sm:text-base transition-all">
+                <i class="fa-solid fa-crown"></i>
+                <span>Albüm Erişimi İçin Paketi Yükselt</span>
+            </a>
+        }
+    </div>
+</div>

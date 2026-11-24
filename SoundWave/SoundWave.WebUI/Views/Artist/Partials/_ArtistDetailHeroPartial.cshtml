@@ -1,0 +1,88 @@
+﻿@using SoundWave.Entity.Enums
+@model SoundWave.DTO.ArtistDtos.ArtistDetailDto
+
+@{
+    int userLevel = ViewBag.UserLevel ?? 1;
+
+    var artistImg = string.IsNullOrEmpty(Model.ImageUrl)
+        ? "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&q=85"
+        : Model.ImageUrl;
+
+    var allSongs = Model.Albums?.SelectMany(a => a.Songs ?? Enumerable.Empty<SoundWave.DTO.SongDtos.ResultSongDto>()).ToList()
+                   ?? new List<SoundWave.DTO.SongDtos.ResultSongDto>();
+
+    long totalArtistPlays = allSongs.Sum(s => (long)s.PlayCount);
+
+    var topPlayableSong = allSongs
+        .Where(s => userLevel >= (int)s.SubscriptionLevel)
+        .OrderByDescending(s => s.PlayCount)
+        .FirstOrDefault();
+
+    string topPlayAction = topPlayableSong?.SubscriptionLevel switch
+    {
+        SubscriptionLevel.Diamond => "PlayDiamond",
+        SubscriptionLevel.Premium => "PlayPremium",
+        SubscriptionLevel.Standard => "PlayStandard",
+        _ => "PlayFree"
+    };
+}
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center mb-12 z-10 relative">
+
+    <div class="lg:col-span-4 flex items-center justify-center">
+        <div class="relative group flex items-center justify-center">
+            <div class="artist-aura absolute -inset-4 rounded-[2.2rem] bg-gradient-to-tr from-pink-500/40 via-fuchsia-500/25 to-cyan-400/40 blur-2xl"></div>
+
+            <div class="relative w-56 h-56 sm:w-64 sm:h-64 xl:w-72 xl:h-72 rounded-[2rem] p-2 bg-gradient-to-br from-white/20 via-white/5 to-transparent border border-white/20 shadow-[0_25px_60px_rgba(0,0,0,0.85)]">
+                <div class="relative w-full h-full rounded-[1.6rem] overflow-hidden">
+                    <img src="@artistImg" alt="@Model.Name"
+                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-white/10"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="lg:col-span-8 flex flex-col items-center lg:items-start text-center lg:text-left">
+
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-pink-500/15 border border-pink-500/35 text-pink-300 text-xs font-extrabold tracking-wider uppercase backdrop-blur-md mb-4">
+            <i class="fa-solid fa-circle-check text-cyan-400"></i>
+            <span>Doğrulanmış Sanatçı</span>
+        </div>
+
+        <h1 class="text-4xl sm:text-5xl xl:text-6xl font-black text-white tracking-tight leading-tight mb-4">
+            @Model.Name
+        </h1>
+
+        @if (!string.IsNullOrWhiteSpace(Model.Bio))
+        {
+            <p class="text-sm sm:text-base text-slate-300/90 leading-relaxed max-w-3xl mb-7">
+                @Model.Bio
+            </p>
+        }
+
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 text-xs sm:text-sm text-slate-300 mb-8">
+            <div class="px-4 py-2.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center gap-2">
+                <i class="fa-solid fa-compact-disc text-pink-400"></i>
+                <span><strong class="text-white">@(Model.Albums?.Count ?? 0)</strong> Albüm</span>
+            </div>
+            <div class="px-4 py-2.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center gap-2">
+                <i class="fa-solid fa-music text-cyan-400"></i>
+                <span><strong class="text-white">@allSongs.Count</strong> Parça</span>
+            </div>
+            <div class="px-4 py-2.5 rounded-2xl bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center gap-2">
+                <i class="fa-solid fa-headphones text-fuchsia-400"></i>
+                <span><strong class="text-white">@totalArtistPlays.ToString("N0")</strong> Toplam Dinlenme</span>
+            </div>
+        </div>
+
+        @if (topPlayableSong != null)
+        {
+            <a asp-controller="Music" asp-action="@topPlayAction" asp-route-id="@topPlayableSong.Id"
+               class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl btn-gradient text-white font-extrabold text-sm sm:text-base shadow-[0_0_40px_rgba(236,72,153,0.45)] hover:scale-105 active:scale-95 transition-all">
+                <i class="fa-solid fa-play text-base"></i>
+                <span>En Popüler Parçayı Çal (@topPlayableSong.Title)</span>
+            </a>
+        }
+    </div>
+</div>
