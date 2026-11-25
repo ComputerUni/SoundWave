@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SoundWave.Business.Services.Abstract;
 using SoundWave.DTO.ArtistDtos;
+using SoundWave.WebUI.Constants;
 
 namespace SoundWave.WebUI.Areas.Admin.Controllers
 {
-    public class ArtistController(IArtistService _artistService, IAlbumService _albumService) : BaseAdminController
+    [Area(AppRoles.Admin)]
+    [Authorize(Roles = AppRoles.Admin)]
+    public class ArtistController(IArtistService _artistService, IAlbumService _albumService) : Controller
     {
-
         public async Task<IActionResult> Index()
         {
             var artists = await _artistService.GetAllAsync();

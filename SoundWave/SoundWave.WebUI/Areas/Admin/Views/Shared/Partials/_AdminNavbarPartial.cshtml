@@ -1,0 +1,33 @@
+﻿<header class="h-20 px-6 lg:px-10 border-b border-white/10 bg-[#090c18]/80 backdrop-blur-xl sticky top-0 z-20 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+        <button type="button" onclick="toggleAdminSidebar()"
+                class="lg:hidden w-10 h-10 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-slate-200 hover:border-pink-500/40">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <div>
+            <h1 class="text-lg sm:text-xl font-black text-white tracking-tight">
+                @(ViewData["Title"] ?? "Yönetim Paneli")
+            </h1>
+            <p class="text-xs text-slate-400 hidden sm:block">
+                SoundWave İçerik & Abonelik Kontrol Merkezi
+            </p>
+        </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Sistem Aktif</span>
+        </div>
+
+        <div class="flex items-center gap-2.5 px-3.5 py-1.5 rounded-2xl bg-white/[0.05] border border-white/10">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-pink-500 to-cyan-400 flex items-center justify-center text-xs font-black text-white">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <span class="text-xs font-bold text-slate-200">
+                @(User.Identity?.Name ?? "Admin")
+            </span>
+        </div>
+    </div>
+</header>
