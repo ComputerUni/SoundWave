@@ -26,6 +26,12 @@ namespace SoundWave.Business.Services.Concrete
             return _mapper.Map<List<ResultSongDto>>(songs);
         }
 
+        public async Task<UpdateSongDto> GetByIdAsync(int id)
+        {
+            var song = await _repository.GetByIdAsync(id);
+            return _mapper.Map<UpdateSongDto>(song);
+        }
+
         public async Task<SongDetailDto> GetSongByIdAsync(int id)
         {
             var song = await _repository.GetByIdWithDetailsAsync(id);
@@ -34,7 +40,7 @@ namespace SoundWave.Business.Services.Concrete
 
         public async Task UpdateSongAsync(UpdateSongDto updateSongDto)
         {
-            var song = await _repository.GetByIdAsync(updateSongDto.SongId);
+            var song = await _repository.GetByIdAsync(updateSongDto.Id);
             _mapper.Map(updateSongDto, song);
             await _repository.UpdateAsync(song);
         }

@@ -7,7 +7,7 @@ namespace SoundWave.DTO.AlbumDtos
 {
     public class UpdateAlbumDto
     {
-        public int AlbumId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public string CoverImageUrl { get; set; }
         public int ReleaseYear { get; set; }

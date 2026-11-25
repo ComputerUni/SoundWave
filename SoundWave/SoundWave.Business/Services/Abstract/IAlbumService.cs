@@ -8,6 +8,7 @@ namespace SoundWave.Business.Services.Abstract
         Task<List<ResultAlbumDto>> GetAllAsync();
         Task CreateAlbumAsync(CreateAlbumDto createAlbumDto);
         Task UpdateAlbumAsync(UpdateAlbumDto updateAlbumDto);
+        Task<UpdateAlbumDto> GetAlbumByIdAsync(int id);
         Task DeleteAlbumAsync(int id);
         Task<AlbumWithSongsDto> GetAlbumWithDetailsAsync(int id);
     }

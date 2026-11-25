@@ -7,7 +7,7 @@ namespace SoundWave.DTO.SongDtos
 {
     public class UpdateSongDto
     {
-        public int SongId { get; set; }
+        public int Id { get; set; }
         public string Title { get; set; }
         public TimeSpan Duration { get; set; }
         public string AudioUrl { get; set; }
