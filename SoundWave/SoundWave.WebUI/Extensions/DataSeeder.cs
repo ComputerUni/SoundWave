@@ -10,7 +10,7 @@ namespace SoundWave.WebUI.Extensions
         public static async Task SeedRolesAsync(IServiceProvider serviceProvider)
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<AppRole>>();
-            var roles = Enum.GetNames(typeof(SubscriptionLevel));
+            var roles = Enum.GetNames(typeof(SubscriptionLevel)).Append("Admin");
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
@@ -60,6 +60,22 @@ namespace SoundWave.WebUI.Extensions
                     CreatedAt = DateTime.UtcNow,
                     SubscriptionLevel = SubscriptionLevel.Diamond
                 }, "Diamond123!", "Diamond"),
+
+                (new AppUser
+                {
+                    UserName = "admin",
+                    Email = "admin@soundwave.com",
+                    FullName = "SoundWave Admin",
+                    CreatedAt = DateTime.UtcNow
+                }, "Admin123!", "Admin"),
+
+                (new AppUser
+                {
+                    UserName = "adminsoundwave",
+                    Email = "admin.soundwave@gmail.com",
+                    FullName = "Admin SoundWave",
+                    CreatedAt = DateTime.UtcNow
+                }, "Admin123!", "Admin"),
             };
 
             foreach (var (user, password, role) in users)
