@@ -1,0 +1,216 @@
+﻿@using SoundWave.DTO.SongDtos
+@model CreateSongDto
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Yeni Şarkı Ekle";
+}
+
+<div class="max-w-5xl mx-auto space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-400">
+                <i class="fa-solid fa-music text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-extrabold text-white tracking-tight">Yeni Şarkı Oluştur</h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                    Albüm ve erişim paketi seviyesini belirleyerek yeni parça ekleyin.
+                </p>
+            </div>
+        </div>
+
+        <a asp-area="Admin" asp-controller="Song" asp-action="Index"
+           class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-slate-200 transition-all">
+            <i class="fa-solid fa-arrow-left text-pink-400"></i>
+            <span>Listeye Dön</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl shadow-2xl">
+            <form asp-area="Admin" asp-controller="Song" asp-action="CreateSong" method="post" novalidate class="space-y-6">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 font-semibold"></div>
+                <div class="space-y-2">
+                    <label asp-for="Title" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                        Şarkı Adı <span class="text-pink-400">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                            <i class="fa-solid fa-headphones-simple"></i>
+                        </span>
+                        <input asp-for="Title" id="songTitleInput" placeholder="Örn: Get Lucky, Instant Crush..."
+                               class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all" />
+                    </div>
+                    <span asp-validation-for="Title" class="text-xs text-rose-400 font-semibold block"></span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="space-y-2">
+                        <label asp-for="AlbumId" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                            Albüm <span class="text-pink-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 pointer-events-none">
+                                <i class="fa-solid fa-compact-disc"></i>
+                            </span>
+                            <select asp-for="AlbumId" asp-items="ViewBag.albums" id="songAlbumSelect"
+                                    class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[#121629] border border-white/10 text-sm text-white focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/20 transition-all">
+                                <option value="">-- Albüm Seçiniz --</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="AlbumId" class="text-xs text-rose-400 font-semibold block"></span>
+                    </div>
+
+                    <div class="space-y-2">
+                        <label asp-for="SubscriptionLevel" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                            Erişim Paketi <span class="text-pink-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500 pointer-events-none">
+                                <i class="fa-solid fa-crown"></i>
+                            </span>
+                            <select asp-for="SubscriptionLevel" asp-items="ViewBag.SubscriptionLevels" id="songLevelSelect"
+                                    class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[#121629] border border-white/10 text-sm text-white focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all">
+                                <option value="">-- Paket Seviyesi Seçiniz --</option>
+                            </select>
+                        </div>
+                        <span asp-validation-for="SubscriptionLevel" class="text-xs text-rose-400 font-semibold block"></span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div class="space-y-2">
+                        <label asp-for="Duration" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                            Süre <span class="text-pink-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                                <i class="fa-solid fa-clock"></i>
+                            </span>
+                            <input asp-for="Duration" id="songDurationInput" placeholder="Örn: 04:08"
+                                   class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/20 transition-all" />
+                        </div>
+                        <span asp-validation-for="Duration" class="text-xs text-rose-400 font-semibold block"></span>
+                    </div>
+
+                    <div class="sm:col-span-2 space-y-2">
+                        <label asp-for="AudioUrl" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                            Ses Dosyası (Audio URL) <span class="text-pink-400">*</span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                                <i class="fa-solid fa-link"></i>
+                            </span>
+                            <input asp-for="AudioUrl" id="songAudioInput" placeholder="https://... veya /audio/track.mp3"
+                                   class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all" />
+                        </div>
+                        <span asp-validation-for="AudioUrl" class="text-xs text-rose-400 font-semibold block"></span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-end gap-3">
+                    <a asp-area="Admin" asp-controller="Song" asp-action="Index"
+                       class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-slate-300 text-center transition-all">
+                        İptal Et
+                    </a>
+                    <button type="submit"
+                            class="w-full sm:w-auto btn-gradient inline-flex items-center justify-center gap-2 px-7 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_0_25px_rgba(236,72,153,0.35)] hover:opacity-95 transition-all">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Şarkıyı Kaydet</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-5">
+                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-pink-400">
+                        Parça Kart Önizlemesi
+                    </span>
+                    <span class="w-2 h-2 rounded-full bg-pink-400 animate-pulse"></span>
+                </div>
+
+                <div class="p-5 rounded-3xl bg-white/[0.03] border border-white/10 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span id="previewLevel"
+                              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-pink-500/15 border border-pink-400/30 text-[10px] font-extrabold uppercase tracking-wider text-pink-300">
+                            <i class="fa-solid fa-crown text-[9px]"></i>
+                            <span>Paket Seçilmedi</span>
+                        </span>
+                        <span id="previewDuration" class="text-xs font-bold text-slate-400">
+                            @(Model != null && Model.Duration != TimeSpan.Zero ? Model.Duration.ToString(@"mm\:ss") : "00:00")
+                        </span>
+                    </div>
+
+                    <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-pink-500/20 to-cyan-400/20 border border-white/15 flex items-center justify-center text-2xl text-pink-400 mx-auto shadow-[0_0_25px_rgba(236,72,153,0.2)]">
+                        <i class="fa-solid fa-wave-square"></i>
+                    </div>
+
+                    <div class="text-center space-y-1">
+                        <h3 id="previewTitle" class="text-base font-black text-white tracking-tight">
+                            @(string.IsNullOrWhiteSpace(Model?.Title) ? "Şarkı Başlığı" : Model.Title)
+                        </h3>
+                        <p id="previewAlbum" class="text-xs font-bold text-cyan-400">
+                            Albüm Seçilmedi
+                        </p>
+                    </div>
+
+                    <audio id="previewAudio" controls class="w-full h-9 rounded-xl hidden"></audio>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-slate-400 flex items-start gap-2.5">
+                <i class="fa-solid fa-shield-halved text-pink-400 mt-0.5"></i>
+                <span>Seçilen erişim seviyesi JWT rol politikalarıyla otomatik eşleşir ve alt paket kullanıcılarını engeller.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const titleInput = document.getElementById('songTitleInput');
+        const albumSelect = document.getElementById('songAlbumSelect');
+        const levelSelect = document.getElementById('songLevelSelect');
+        const durationInput = document.getElementById('songDurationInput');
+        const audioInput = document.getElementById('songAudioInput');
+
+        const previewTitle = document.getElementById('previewTitle');
+        const previewAlbum = document.getElementById('previewAlbum');
+        const previewLevel = document.getElementById('previewLevel').querySelector('span');
+        const previewDuration = document.getElementById('previewDuration');
+        const previewAudio = document.getElementById('previewAudio');
+
+        titleInput?.addEventListener('input', (e) => {
+            previewTitle.textContent = e.target.value.trim() || 'Şarkı Başlığı';
+        });
+
+        albumSelect?.addEventListener('change', (e) => {
+            const text = e.target.options[e.target.selectedIndex]?.text;
+            previewAlbum.textContent = e.target.value ? text : 'Albüm Seçilmedi';
+        });
+
+        levelSelect?.addEventListener('change', (e) => {
+            const text = e.target.options[e.target.selectedIndex]?.text;
+            previewLevel.textContent = e.target.value ? text : 'Paket Seçilmedi';
+        });
+
+        durationInput?.addEventListener('input', (e) => {
+            previewDuration.textContent = e.target.value.trim() || '00:00';
+        });
+
+        audioInput?.addEventListener('input', (e) => {
+            const url = e.target.value.trim();
+            if (url) {
+                previewAudio.src = url;
+                previewAudio.classList.remove('hidden');
+            } else {
+                previewAudio.classList.add('hidden');
+            }
+        });
+    </script>
+}

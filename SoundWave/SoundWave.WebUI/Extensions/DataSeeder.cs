@@ -76,6 +76,13 @@ namespace SoundWave.WebUI.Extensions
                     FullName = "Admin SoundWave",
                     CreatedAt = DateTime.UtcNow
                 }, "Admin123!", "Admin"),
+                (new AppUser
+                {
+                    UserName = "superadmin",
+                    Email = "superadmin@soundwave.com",
+                    FullName = "SoundWave Moderator",
+                    CreatedAt = DateTime.UtcNow
+                }, "Admin123!", "Admin"),
             };
 
             foreach (var (user, password, role) in users)

@@ -14,6 +14,11 @@ namespace SoundWave.DataAccess.Repositories.Albums
         {
         }
 
+        public async Task<List<Album>> GetAlbumAllAsync()
+        {
+            return await _context.Albums.AsNoTracking().Include(x => x.Artist).ToListAsync();
+        }
+
         public async Task<Album> GetAlbumWithDetailsAsync(int id)
         {
             return await _context.Albums.AsNoTracking().Include(x => x.Songs).Include(x => x.Artist).FirstOrDefaultAsync(x => x.Id == id && !x.IsDeleted);

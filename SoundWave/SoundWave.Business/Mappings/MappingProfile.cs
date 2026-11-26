@@ -23,14 +23,18 @@ namespace SoundWave.Business.Mappings
                 .ForMember(dest => dest.ArtistImageUrl, opt => opt.MapFrom(src => src.Album.Artist.ImageUrl))
                 .ForMember(dest => dest.AlbumCoverImageUrl, opt => opt.MapFrom(src => src.Album.CoverImageUrl));
 
+            CreateMap<Song, UpdateSongDto>().ReverseMap();
+            CreateMap<Song, CreateSongDto>().ReverseMap();
+
             CreateMap<Artist, ResultArtistDto>();
             CreateMap<CreateArtistDto, Artist>();
             CreateMap<Artist, UpdateArtistDto>().ReverseMap();
             CreateMap<Artist, ArtistDetailDto>().ReverseMap();
 
-            CreateMap<Album, ResultAlbumDto>();
-            CreateMap<CreateAlbumDto, Album>();
-            CreateMap<UpdateAlbumDto, Album>();
+            CreateMap<Album, ResultAlbumDto>()
+                .ForMember(dest => dest.ArtistName, opt => opt.MapFrom(src => src.Artist.Name));
+            CreateMap<Album, CreateAlbumDto>().ReverseMap();
+            CreateMap<Album, UpdateAlbumDto>().ReverseMap();
             CreateMap<Album, AlbumWithSongsDto>().ReverseMap();
         }
     }

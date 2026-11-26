@@ -1,0 +1,151 @@
+﻿@using SoundWave.DTO.SongDtos
+@model List<ResultSongDto>
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Şarkı Yönetimi";
+    int count = 0;
+}
+
+<div class="space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-400">
+                <i class="fa-solid fa-music text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-extrabold text-white tracking-tight">Kayıtlı Şarkılar</h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                    Katalogda toplam <span class="text-pink-400 font-bold">@(Model?.Count ?? 0)</span> parça bulunuyor.
+                </p>
+            </div>
+        </div>
+
+        <a asp-area="Admin" asp-controller="Song" asp-action="CreateSong"
+           class="btn-gradient inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_0_25px_rgba(236,72,153,0.35)] hover:opacity-95 transition-all">
+            <i class="fa-solid fa-plus"></i>
+            <span>Yeni Şarkı Ekle</span>
+        </a>
+    </div>
+
+    <div class="rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl overflow-hidden shadow-2xl">
+        @if (Model != null && Model.Any())
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-white/10 bg-white/[0.02] text-[11px] font-extrabold uppercase tracking-wider text-slate-400">
+                            <th class="py-4 px-6 w-16">#</th>
+                            <th class="py-4 px-6">Şarkı</th>
+                            <th class="py-4 px-6">Albüm</th>
+                            <th class="py-4 px-6">Erişim Paketi</th>
+                            <th class="py-4 px-6">Süre</th>
+                            <th class="py-4 px-6">Dinlenme</th>
+                            <th class="py-4 px-6 text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-white/[0.06] text-sm">
+                        @foreach (var item in Model)
+                        {
+                            count++;
+                            var levelStr = item.SubscriptionLevel.ToString();
+                            var badgeClass = levelStr switch
+                            {
+                                "Diamond" => "bg-cyan-500/15 border-cyan-400/40 text-cyan-300",
+                                "Premium" => "bg-pink-500/15 border-pink-400/40 text-pink-300",
+                                "Standard" => "bg-violet-500/15 border-violet-400/40 text-violet-300",
+                                _ => "bg-slate-500/15 border-slate-400/30 text-slate-300"
+                            };
+                            var levelLabel = levelStr switch
+                            {
+                                "4" => "Diamond",
+                                "3" => "Premium",
+                                "2" => "Standard",
+                                "1" => "Free",
+                                _ => levelStr
+                            };
+
+                            <tr class="hover:bg-white/[0.03] transition-colors group">
+                                <td class="py-4 px-6 font-bold text-slate-500">
+                                    @count
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center gap-3.5">
+                                        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-pink-500/20 to-cyan-500/20 border border-white/10 flex items-center justify-center text-pink-400 shrink-0">
+                                            <i class="fa-solid fa-play text-xs"></i>
+                                        </div>
+                                        <div>
+                                            <span class="font-bold text-white group-hover:text-pink-300 transition-colors block">
+                                                @item.Title
+                                            </span>
+                                            <span class="text-[11px] text-slate-500">ID: #@item.Id</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-white/[0.05] border border-white/10 text-xs font-bold text-slate-200">
+                                        <i class="fa-solid fa-compact-disc text-cyan-400 text-[11px]"></i>
+                                        <span>@item.AlbumTitle</span>
+                                    </span>
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-[11px] font-extrabold uppercase tracking-wider @badgeClass">
+                                        <i class="fa-solid fa-crown text-[9px]"></i>
+                                        <span>@levelLabel</span>
+                                    </span>
+                                </td>
+
+                                <td class="py-4 px-6 text-xs font-semibold text-slate-300">
+                                    @item.Duration
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <span class="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300">
+                                        <i class="fa-solid fa-headphones text-cyan-400"></i>
+                                        <span>@item.PlayCount.ToString("N0")</span>
+                                    </span>
+                                </td>
+
+                                <td class="py-4 px-6">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <a asp-area="Admin" asp-controller="Song" asp-action="UpdateSong" asp-route-id="@item.Id"
+                                           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 text-cyan-300 text-xs font-bold transition-all">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            <span>Düzenle</span>
+                                        </a>
+
+                                        <a asp-area="Admin" asp-controller="Song" asp-action="DeleteSong" asp-route-id="@item.Id"
+                                           onclick="return confirm('@item.Title adlı şarkıyı silmek istediğinize emin misiniz?');"
+                                           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-300 text-xs font-bold transition-all">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                            <span>Sil</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="py-16 px-6 text-center">
+                <div class="w-16 h-16 rounded-3xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-slate-500 mx-auto mb-4">
+                    <i class="fa-solid fa-music text-2xl"></i>
+                </div>
+                <h3 class="text-base font-bold text-white">Henüz Şarkı Eklenmemiş</h3>
+                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                    Kullanıcıların abonelik paketlerine göre dinleyebileceği ilk parçayı kataloğa ekleyin.
+                </p>
+                <a asp-area="Admin" asp-controller="Song" asp-action="CreateSong"
+                   class="btn-gradient inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-white mt-5">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>İlk Şarkıyı Ekle</span>
+                </a>
+            </div>
+        }
+    </div>
+</div>

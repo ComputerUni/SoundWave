@@ -35,7 +35,7 @@ namespace SoundWave.Business.Services.Concrete
 
         public async Task<List<ResultAlbumDto>> GetAllAsync()
         {
-            var albums = await _repository.GetAllAsync();
+            var albums = await _repository.GetAlbumAllAsync();
             return _mapper.Map<List<ResultAlbumDto>>(albums);
         }
 
