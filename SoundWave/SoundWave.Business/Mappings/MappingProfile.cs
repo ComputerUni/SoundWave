@@ -25,7 +25,7 @@ namespace SoundWave.Business.Mappings
 
             CreateMap<Artist, ResultArtistDto>();
             CreateMap<CreateArtistDto, Artist>();
-            CreateMap<UpdateArtistDto, Artist>();
+            CreateMap<Artist, UpdateArtistDto>().ReverseMap();
             CreateMap<Artist, ArtistDetailDto>().ReverseMap();
 
             CreateMap<Album, ResultAlbumDto>();

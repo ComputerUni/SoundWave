@@ -1,0 +1,169 @@
+﻿@using SoundWave.DTO.ArtistDtos
+@model CreateArtistDto
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    ViewData["Title"] = "Yeni Sanatçı Ekle";
+}
+
+<div class="max-w-5xl mx-auto space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-pink-500/15 border border-pink-500/30 flex items-center justify-center text-pink-400">
+                <i class="fa-solid fa-user-plus text-xl"></i>
+            </div>
+            <div>
+                <h2 class="text-lg font-extrabold text-white tracking-tight">Yeni Sanatçı Oluştur</h2>
+                <p class="text-xs text-slate-400 mt-0.5">
+                    Platform kataloğuna yeni bir sanatçı profili ekleyin.
+                </p>
+            </div>
+        </div>
+
+        <a asp-area="Admin" asp-controller="Artist" asp-action="Index"
+           class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-slate-200 transition-all">
+            <i class="fa-solid fa-arrow-left text-pink-400"></i>
+            <span>Listeye Dön</span>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl shadow-2xl">
+            <form asp-area="Admin" asp-controller="Artist" asp-action="CreateArtist" method="post" novalidate class="space-y-6">
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/30 text-xs text-rose-300 font-semibold"></div>
+
+                <div class="space-y-2">
+                    <label asp-for="Name" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                        Sanatçı Adı <span class="text-pink-400">*</span>
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </span>
+                        <input asp-for="Name" id="artistNameInput" placeholder="Örn: Daft Punk, Sezen Aksu..."
+                               class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all" />
+                    </div>
+                    <span asp-validation-for="Name" class="text-xs text-rose-400 font-semibold block"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="ImageUrl" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                        Profil Görseli (URL)
+                    </label>
+                    <div class="relative">
+                        <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-slate-500">
+                            <i class="fa-solid fa-image"></i>
+                        </span>
+                        <input asp-for="ImageUrl" id="artistImageInput" placeholder="https://..."
+                               class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500/60 focus:ring-2 focus:ring-cyan-500/20 transition-all" />
+                    </div>
+                    <span asp-validation-for="ImageUrl" class="text-xs text-rose-400 font-semibold block"></span>
+                </div>
+
+                <div class="space-y-2">
+                    <label asp-for="Bio" class="block text-xs font-extrabold uppercase tracking-wider text-slate-300">
+                        Sanatçı Biyografisi
+                    </label>
+                    <textarea asp-for="Bio" id="artistBioInput" rows="5"
+                              placeholder="Sanatçının müzik tarzı, kariyer özeti ve öne çıkan başarıları..."
+                              class="w-full p-4 rounded-2xl bg-white/[0.04] border border-white/10 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-pink-500/60 focus:ring-2 focus:ring-pink-500/20 transition-all resize-none"></textarea>
+                    <span asp-validation-for="Bio" class="text-xs text-rose-400 font-semibold block"></span>
+                </div>
+
+                <div class="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-end gap-3">
+                    <a asp-area="Admin" asp-controller="Artist" asp-action="Index"
+                       class="w-full sm:w-auto px-6 py-3 rounded-2xl bg-white/[0.05] hover:bg-white/[0.1] border border-white/10 text-xs font-bold text-slate-300 text-center transition-all">
+                        İptal Et
+                    </a>
+                    <button type="submit"
+                            class="w-full sm:w-auto btn-gradient inline-flex items-center justify-center gap-2 px-7 py-3 rounded-2xl text-xs font-extrabold uppercase tracking-wider text-white shadow-[0_0_25px_rgba(236,72,153,0.35)] hover:opacity-95 transition-all">
+                        <i class="fa-solid fa-check"></i>
+                        <span>Sanatçıyı Kaydet</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="p-6 rounded-3xl bg-[#0b0e1c]/90 border border-white/10 backdrop-blur-xl flex flex-col justify-between">
+            <div>
+                <div class="flex items-center justify-between mb-5">
+                    <span class="text-[11px] font-extrabold uppercase tracking-wider text-cyan-400">
+                        Canlı Kart Önizlemesi
+                    </span>
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                </div>
+
+                <div class="p-5 rounded-3xl bg-white/[0.03] border border-white/10 text-center space-y-4">
+                    <div class="relative w-28 h-28 mx-auto">
+                        <img id="previewImage" src="@Model?.ImageUrl" alt="Önizleme"
+                             class="w-28 h-28 rounded-full object-cover border-2 border-pink-500/50 shadow-[0_0_30px_rgba(236,72,153,0.25)] @(string.IsNullOrWhiteSpace(Model?.ImageUrl) ? "hidden" : "")" />
+                        <div id="previewFallback"
+                             class="w-28 h-28 rounded-full bg-gradient-to-tr from-pink-500/20 to-cyan-400/20 border border-white/15 flex items-center justify-center text-3xl font-black text-pink-400 mx-auto @(string.IsNullOrWhiteSpace(Model?.ImageUrl) ? "" : "hidden")">
+                            <i class="fa-solid fa-microphone-lines"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 id="previewName" class="text-base font-black text-white tracking-tight">
+                            @(string.IsNullOrWhiteSpace(Model?.Name) ? "Sanatçı Adı" : Model.Name)
+                        </h3>
+                        <span class="inline-block mt-1 px-2.5 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/25 text-[10px] font-bold uppercase tracking-wider text-pink-300">
+                            SoundWave Artist
+                        </span>
+                    </div>
+
+                    <p id="previewBio" class="text-xs text-slate-400 leading-relaxed line-clamp-4">
+                        @(string.IsNullOrWhiteSpace(Model?.Bio) ? "Sanatçı biyografisi burada görünecek..." : Model.Bio)
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-[11px] text-slate-400 flex items-start gap-2.5">
+                <i class="fa-solid fa-circle-info text-cyan-400 mt-0.5"></i>
+                <span>Görsel URL alanına geçerli bir bağlantı yapıştırdığınızda profil fotoğrafı otomatik önizlenir.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const nameInput = document.getElementById('artistNameInput');
+        const imageInput = document.getElementById('artistImageInput');
+        const bioInput = document.getElementById('artistBioInput');
+
+        const previewName = document.getElementById('previewName');
+        const previewImage = document.getElementById('previewImage');
+        const previewFallback = document.getElementById('previewFallback');
+        const previewBio = document.getElementById('previewBio');
+
+        nameInput?.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            previewName.textContent = val || 'Sanatçı Adı';
+        });
+
+        bioInput?.addEventListener('input', (e) => {
+            const val = e.target.value.trim();
+            previewBio.textContent = val || 'Sanatçı biyografisi burada görünecek...';
+        });
+
+        imageInput?.addEventListener('input', (e) => {
+            const url = e.target.value.trim();
+            if (url) {
+                previewImage.src = url;
+                previewImage.classList.remove('hidden');
+                previewFallback.classList.add('hidden');
+            } else {
+                previewImage.classList.add('hidden');
+                previewFallback.classList.remove('hidden');
+            }
+        });
+
+        previewImage?.addEventListener('error', () => {
+            previewImage.classList.add('hidden');
+            previewFallback.classList.remove('hidden');
+        });
+    </script>
+}

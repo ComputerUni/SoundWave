@@ -36,6 +36,12 @@ namespace SoundWave.WebUI.Controllers
                 Expires = DateTime.UtcNow.AddMinutes(10)
             });
 
+            var user = await _userManager.FindByNameAsync(dto.UserNameOrEmail) ?? await _userManager.FindByEmailAsync(dto.UserNameOrEmail);
+            var roles = await _userManager.GetRolesAsync(user);
+
+            if(roles.Contains("Admin"))
+                return RedirectToAction("Index", "Artist", new { area = "Admin" });
+
             return RedirectToAction("Discover", "Music");
         }
 
