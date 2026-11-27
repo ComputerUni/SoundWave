@@ -28,7 +28,7 @@ namespace SoundWave.Business.Services.Concrete
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 var packageRole = roles.FirstOrDefault(r => Enum.TryParse<SubscriptionLevel>(r, out _));
-                var package = Enum.Parse<SubscriptionLevel>(packageRole);
+                var package = Enum.TryParse<SubscriptionLevel>(packageRole, out var parsedPackage) ? parsedPackage : SubscriptionLevel.Free;
 
                 result.Add(new ResultUserDto
                 {
@@ -51,7 +51,7 @@ namespace SoundWave.Business.Services.Concrete
             var user = await _userManager.FindByIdAsync(id.ToString());
             var role = await _userManager.GetRolesAsync(user);
             var packageRole = role.FirstOrDefault(r => Enum.TryParse<SubscriptionLevel>(r, out _));
-            var package = Enum.Parse<SubscriptionLevel>(packageRole);
+            var package = Enum.TryParse<SubscriptionLevel>(packageRole, out var parsedPackage) ? parsedPackage : SubscriptionLevel.Free;
 
             var result = new AssignPackageDto
             {
@@ -76,10 +76,16 @@ namespace SoundWave.Business.Services.Concrete
             }
 
             var isCurrentlyLockedOut = await _userManager.IsLockedOutAsync(user);
-            var lockoutEnd = isCurrentlyLockedOut ? (DateTimeOffset?)null : DateTimeOffset.MaxValue;
-            var result = await _userManager.SetLockoutEndDateAsync(user, lockoutEnd);
-
-            await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+           
+            if(isCurrentlyLockedOut)
+            {
+                await _userManager.SetLockoutEndDateAsync(user, null);
+            }
+            else
+            {
+                await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+            }
+            
             return true;
         }
 
@@ -98,7 +104,13 @@ namespace SoundWave.Business.Services.Concrete
             }
 
             var addResult = await _userManager.AddToRoleAsync(user, dto.SelectedPackage.ToString());
-            return addResult.Succeeded;
+            if (!addResult.Succeeded) return false;
+
+            user.SubscriptionLevel = dto.SelectedPackage;
+            await _userManager.UpdateAsync(user);
+
+            return true;
+
         }
     }
 }
