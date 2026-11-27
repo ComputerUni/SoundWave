@@ -33,10 +33,16 @@ namespace SoundWave.WebUI.Controllers
                 HttpOnly = true,
                 Secure = true,
                 SameSite = SameSiteMode.Strict,
-                Expires = DateTime.UtcNow.AddMinutes(10)
+                Expires = DateTime.UtcNow.AddMinutes(60)
             });
 
             var user = await _userManager.FindByNameAsync(dto.UserNameOrEmail) ?? await _userManager.FindByEmailAsync(dto.UserNameOrEmail);
+
+            if (user != null && user.LockoutEnd.HasValue)
+            {
+                return RedirectToAction("AccountLocked", "Auth");
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
 
             if(roles.Contains("Admin"))
@@ -133,6 +139,12 @@ namespace SoundWave.WebUI.Controllers
 
         [AllowAnonymous]
         public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public IActionResult AccountLocked()
         {
             return View();
         }
