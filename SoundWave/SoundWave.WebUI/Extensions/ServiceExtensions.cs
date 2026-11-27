@@ -26,6 +26,7 @@ namespace SoundWave.WebUI.Extensions
             services.AddScoped<IArtistService, ArtistService>();
             services.AddScoped<ISongService, SongService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
         }
 
         public static void AddRepositories(this IServiceCollection services)
