@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SoundWave.Business.Services.Abstract;
@@ -7,12 +8,13 @@ using SoundWave.DTO.AlbumDtos;
 using SoundWave.DTO.SongDtos;
 using SoundWave.Entity.Enums;
 using SoundWave.WebUI.Constants;
+using SoundWave.WebUI.Extensions;
 
 namespace SoundWave.WebUI.Areas.Admin.Controllers
 {
     [Area(AppRoles.Admin)]
     [Authorize(Roles = AppRoles.Admin)]
-    public class SongController(ISongService _songService, IAlbumService _albumService) : Controller
+    public class SongController(ISongService _songService, IAlbumService _albumService, IValidator<CreateSongDto> _createSongValidator, IValidator<UpdateSongDto> _updateSongValidator) : Controller
     {
         private async Task GetAlbums()
         {
@@ -51,9 +53,12 @@ namespace SoundWave.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSong(CreateSongDto dto)
         {
-            if(!ModelState.IsValid)
+            var result = await _createSongValidator.ValidateAsync(dto);
+
+            if(!result.IsValid)
             {
                 await GetAlbums();
+                result.AddToModelState(ModelState);
                 return View(dto);
             }
 
@@ -73,11 +78,15 @@ namespace SoundWave.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateSong(UpdateSongDto dto)
         {
-            if (!ModelState.IsValid)
+            var result = await _updateSongValidator.ValidateAsync(dto);
+
+            if (!result.IsValid)
             {
                 await GetAlbums();
+                result.AddToModelState(ModelState);
                 return View(dto);
             }
+
             await _songService.UpdateSongAsync(dto);
             return RedirectToAction(nameof(Index));
         }

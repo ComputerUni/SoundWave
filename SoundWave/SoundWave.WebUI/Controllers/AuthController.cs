@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SoundWave.Business.Services.Abstract;
@@ -6,11 +7,12 @@ using SoundWave.DTO.AuthDtos;
 using SoundWave.DTO.SelectPlanDtos;
 using SoundWave.Entity.Entities;
 using SoundWave.Entity.Enums;
+using SoundWave.WebUI.Extensions;
 using System.Security.Claims;
 
 namespace SoundWave.WebUI.Controllers
 {
-    public class AuthController(IAuthService _authService, ITokenService _tokenService, UserManager<AppUser> _userManager) : Controller
+    public class AuthController(IAuthService _authService, ITokenService _tokenService, UserManager<AppUser> _userManager, IValidator<RegisterDto> _registerValidator, IValidator<LoginDto> _loginValidator) : Controller
     {
         [HttpGet]
         public IActionResult Login()
@@ -21,10 +23,11 @@ namespace SoundWave.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto dto)
         {
+            var validate = await _loginValidator.ValidateAsync(dto);
             var result = await _authService.Login(dto);
-            if (result is null)
+            if (validate is null)
             {
-                ModelState.AddModelError("", "Email / Kullanıcı Adı veya Şifre Hatalı");
+                validate.AddToModelState(ModelState);
                 return View(dto);
             }
 
@@ -46,7 +49,7 @@ namespace SoundWave.WebUI.Controllers
             var roles = await _userManager.GetRolesAsync(user);
 
             if(roles.Contains("Admin"))
-                return RedirectToAction("Index", "Artist", new { area = "Admin" });
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
 
             return RedirectToAction("Discover", "Music");
         }
@@ -60,13 +63,16 @@ namespace SoundWave.WebUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterDto dto)
         {
-            if (dto.Password != dto.ConfirmPassword)
+            var validate = await _registerValidator.ValidateAsync(dto);
+
+            if (!validate.IsValid)
             {
-                ModelState.AddModelError(string.Empty, "Şifreler birbiriyle uyumlu değil.");
-                return View();
+                validate.AddToModelState(ModelState);
+                return View(dto);
             }
 
             var result = await _authService.Register(dto);
+
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(dto.UserName);

@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SoundWave.Business.Services.Abstract;
 using SoundWave.DTO.AlbumDtos;
 using SoundWave.WebUI.Constants;
+using SoundWave.WebUI.Extensions;
 
 namespace SoundWave.WebUI.Areas.Admin.Controllers
 {
     [Area(AppRoles.Admin)]
     [Authorize(Roles = AppRoles.Admin)]
-    public class AlbumController(IAlbumService _albumService, IArtistService _artistService) : Controller
+    public class AlbumController(IAlbumService _albumService, IArtistService _artistService, IValidator<CreateAlbumDto> _createAlbumValidator, IValidator<UpdateAlbumDto> _updateAlbumValidator) : Controller
     {
         private async Task GetArtists()
         {
@@ -39,9 +41,12 @@ namespace SoundWave.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAlbum(CreateAlbumDto dto)
         {
-            if (!ModelState.IsValid)
+            var result = await _createAlbumValidator.ValidateAsync(dto);
+
+            if (!result.IsValid)
             {
                 await GetArtists();
+                result.AddToModelState(ModelState);
                 return View(dto);
             }
             await _albumService.CreateAlbumAsync(dto);
@@ -59,9 +64,12 @@ namespace SoundWave.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateAlbum(UpdateAlbumDto dto)
         {
-            if (!ModelState.IsValid)
+            var result = await _updateAlbumValidator.ValidateAsync(dto);
+
+            if (!result.IsValid)
             {
                 await GetArtists();
+                result.AddToModelState(ModelState);
                 return View(dto);
             }
             await _albumService.UpdateAlbumAsync(dto);

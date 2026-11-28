@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using SoundWave.Business.Services.Abstract;
 using SoundWave.DTO.ArtistDtos;
 using SoundWave.WebUI.Constants;
+using SoundWave.WebUI.Extensions;
 
 namespace SoundWave.WebUI.Areas.Admin.Controllers
 {
     [Area(AppRoles.Admin)]
     [Authorize(Roles = AppRoles.Admin)]
-    public class ArtistController(IArtistService _artistService, IAlbumService _albumService) : Controller
+    public class ArtistController(IArtistService _artistService, IAlbumService _albumService, IValidator<CreateArtistDto> _createArtistValidator, IValidator<UpdateArtistDto> _updateArtistValidator) : Controller
     {
         public async Task<IActionResult> Index()
         {
@@ -26,8 +27,11 @@ namespace SoundWave.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateArtist(CreateArtistDto dto)
         {
-            if(!ModelState.IsValid)
+            var result = await _createArtistValidator.ValidateAsync(dto);
+
+            if(!result.IsValid)
             {
+                result.AddToModelState(ModelState);
                 return View(dto);
             }
 
@@ -45,6 +49,14 @@ namespace SoundWave.WebUI.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateArtist(UpdateArtistDto dto)
         {
+            var result = await _updateArtistValidator.ValidateAsync(dto);
+
+            if(!result.IsValid)
+            {
+                result.AddToModelState(ModelState);
+                return View(dto);
+            }
+
             await _artistService.UpdateArtistAsync(dto);
             return RedirectToAction(nameof(Index));
         }
