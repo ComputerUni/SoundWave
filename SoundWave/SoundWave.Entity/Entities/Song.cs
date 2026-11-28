@@ -15,5 +15,6 @@ namespace SoundWave.Entity.Entities
         public SubscriptionLevel SubscriptionLevel { get; set; }
         public int AlbumId { get; set; }
         public Album Album { get; set; }
+        public List<PlaylistSong> PlaylistSongs { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace SoundWave.Entity.Entities
         public string? ProfileImageUrl { get; set; }
         public DateTime CreatedAt { get; set; }
         public SubscriptionLevel SubscriptionLevel { get; set; }
+        public List<Playlist> Playlists { get; set; }
     }
 }

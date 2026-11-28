@@ -302,6 +302,70 @@ namespace SoundWave.DataAccess.Migrations
                     b.ToTable("Artists");
                 });
 
+            modelBuilder.Entity("SoundWave.Entity.Entities.Playlist", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AppUserId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CoverImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Playlists");
+                });
+
+            modelBuilder.Entity("SoundWave.Entity.Entities.PlaylistSong", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PlaylistId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SongId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SongId");
+
+                    b.HasIndex("PlaylistId", "SongId")
+                        .IsUnique();
+
+                    b.ToTable("PlaylistSongs");
+                });
+
             modelBuilder.Entity("SoundWave.Entity.Entities.Song", b =>
                 {
                     b.Property<int>("Id")
@@ -405,6 +469,36 @@ namespace SoundWave.DataAccess.Migrations
                     b.Navigation("Artist");
                 });
 
+            modelBuilder.Entity("SoundWave.Entity.Entities.Playlist", b =>
+                {
+                    b.HasOne("SoundWave.Entity.Entities.AppUser", "AppUser")
+                        .WithMany("Playlists")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("SoundWave.Entity.Entities.PlaylistSong", b =>
+                {
+                    b.HasOne("SoundWave.Entity.Entities.Playlist", "Playlist")
+                        .WithMany("PlaylistSongs")
+                        .HasForeignKey("PlaylistId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SoundWave.Entity.Entities.Song", "Song")
+                        .WithMany("PlaylistSongs")
+                        .HasForeignKey("SongId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Playlist");
+
+                    b.Navigation("Song");
+                });
+
             modelBuilder.Entity("SoundWave.Entity.Entities.Song", b =>
                 {
                     b.HasOne("SoundWave.Entity.Entities.Album", "Album")
@@ -421,9 +515,24 @@ namespace SoundWave.DataAccess.Migrations
                     b.Navigation("Songs");
                 });
 
+            modelBuilder.Entity("SoundWave.Entity.Entities.AppUser", b =>
+                {
+                    b.Navigation("Playlists");
+                });
+
             modelBuilder.Entity("SoundWave.Entity.Entities.Artist", b =>
                 {
                     b.Navigation("Albums");
+                });
+
+            modelBuilder.Entity("SoundWave.Entity.Entities.Playlist", b =>
+                {
+                    b.Navigation("PlaylistSongs");
+                });
+
+            modelBuilder.Entity("SoundWave.Entity.Entities.Song", b =>
+                {
+                    b.Navigation("PlaylistSongs");
                 });
 #pragma warning restore 612, 618
         }

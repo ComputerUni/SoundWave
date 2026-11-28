@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using SoundWave.DTO.AlbumDtos;
 using SoundWave.DTO.ArtistDtos;
+using SoundWave.DTO.PlaylistDtos;
 using SoundWave.DTO.SongDtos;
 using SoundWave.Entity.Entities;
 
@@ -36,6 +37,11 @@ namespace SoundWave.Business.Mappings
             CreateMap<Album, CreateAlbumDto>().ReverseMap();
             CreateMap<Album, UpdateAlbumDto>().ReverseMap();
             CreateMap<Album, AlbumWithSongsDto>().ReverseMap();
+
+            CreateMap<Playlist, ResultPlaylistDto>();
+            CreateMap<Playlist, UpdatePlaylistDto>().ReverseMap();
+            CreateMap<Playlist, CreatePlaylistDto>().ReverseMap();
+            CreateMap<Playlist, PlaylistDetailDto>().ReverseMap();
         }
     }
 }
