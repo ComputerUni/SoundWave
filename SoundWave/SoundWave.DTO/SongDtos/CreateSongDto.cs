@@ -1,7 +1,4 @@
 ﻿using SoundWave.Entity.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SoundWave.DTO.SongDtos
 {

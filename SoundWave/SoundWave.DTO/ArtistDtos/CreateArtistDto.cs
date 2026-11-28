@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SoundWave.DTO.ArtistDtos
+﻿namespace SoundWave.DTO.ArtistDtos
 {
     public class CreateArtistDto
     {

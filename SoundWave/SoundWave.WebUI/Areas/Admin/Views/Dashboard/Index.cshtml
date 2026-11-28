@@ -2,11 +2,10 @@
 @using System.Text.Json
 @{
     ViewData["Title"] = "Yönetim Paneli";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; // Kendi Admin Layout yolunla eşleştir
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml"; 
 }
 
 <div class="p-6 space-y-6">
-    <!-- Üst Başlık ve Hızlı Kısayollar -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h1 class="text-2xl font-bold text-white tracking-tight">Genel Bakış</h1>
@@ -28,9 +27,7 @@
         </div>
     </div>
 
-    <!-- 1. SIRA: 4 ANA KPI KARTI -->
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-        <!-- Toplam Kullanıcı -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-indigo-500/30 transition">
             <div class="flex items-center justify-between">
                 <div>
@@ -51,7 +48,6 @@
             </div>
         </div>
 
-        <!-- Toplam Sanatçı -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-purple-500/30 transition">
             <div class="flex items-center justify-between">
                 <div>
@@ -70,7 +66,6 @@
             </div>
         </div>
 
-        <!-- Toplam Albüm -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-cyan-500/30 transition">
             <div class="flex items-center justify-between">
                 <div>
@@ -90,7 +85,6 @@
             </div>
         </div>
 
-        <!-- Toplam Şarkı -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg hover:border-emerald-500/30 transition">
             <div class="flex items-center justify-between">
                 <div>
@@ -110,9 +104,7 @@
         </div>
     </div>
 
-    <!-- 2. SIRA: CHART.JS GRAFİKLERİ -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Sol Grafik: Abonelik Paketi Dağılımı (Doughnut) -->
         <div class="lg:col-span-5 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
             <div>
                 <h2 class="text-base font-bold text-white">Abonelik Paketi Dağılımı</h2>
@@ -141,7 +133,6 @@
             </div>
         </div>
 
-        <!-- Sağ Grafik: En Çok Şarkısı Olan Sanatçılar (Bar) -->
         <div class="lg:col-span-7 bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
             <div>
                 <h2 class="text-base font-bold text-white">En Çok Şarkıya Sahip Sanatçılar</h2>
@@ -153,9 +144,7 @@
         </div>
     </div>
 
-    <!-- 3. SIRA: SON EKLENEN ŞARKILAR & SON KAYIT OLAN KULLANICILAR -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        <!-- Son Eklenen Şarkılar -->
         <div class="lg:col-span-7 bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
             <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
                 <div>
@@ -215,7 +204,6 @@
             </div>
         </div>
 
-        <!-- Son Kayıt Olan Kullanıcılar -->
         <div class="lg:col-span-5 bg-slate-900/80 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
             <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
                 <div>
@@ -260,11 +248,9 @@
     </div>
 </div>
 
-<!-- Chart.js CDN -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // 1. Abonelik Paketi Dağılımı (Doughnut Chart)
         const packageCtx = document.getElementById('packageChart').getContext('2d');
         new Chart(packageCtx, {
             type: 'doughnut',
@@ -278,10 +264,10 @@
                         @Model.DiamondUserCount
                     ],
                     backgroundColor: [
-                        'rgba(100, 116, 139, 0.8)', // Slate (Free)
-                        'rgba(99, 102, 241, 0.85)', // Indigo (Standard)
-                        'rgba(245, 158, 11, 0.85)', // Amber (Premium)
-                        'rgba(6, 182, 212, 0.85)'   // Cyan (Diamond)
+                        'rgba(100, 116, 139, 0.8)', 
+                        'rgba(99, 102, 241, 0.85)', 
+                        'rgba(245, 158, 11, 0.85)', 
+                        'rgba(6, 182, 212, 0.85)'   
                     ],
                     borderColor: '#0f172a',
                     borderWidth: 3,
@@ -305,7 +291,6 @@
             }
         });
 
-        // 2. En Çok Şarkısı Olan Sanatçılar (Bar Chart)
         const artistLabels = @Html.Raw(JsonSerializer.Serialize(Model.TopArtistNames));
         const artistData = @Html.Raw(JsonSerializer.Serialize(Model.TopArtistSongCounts));
 
